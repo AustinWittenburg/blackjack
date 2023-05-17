@@ -1,25 +1,28 @@
 import random
 
 count = 0
-num_decks = 2
-deck = ['2c', '3c', '4c', '5c', '6c', '7c', '8c', '9c', 'Tc', 'Jc', 'Qc', 'Kc', 'Ac',
-        '2h', '3h', '4h', '5h', '6h', '7h', '8h', '9h', 'Th', 'Jh', 'Qh', 'Kh', 'Ah',
-        '2s', '3s', '4s', '5s', '6s', '7s', '8s', '9s', 'Ts', 'Js', 'Qs', 'Ks', 'As',
-        '2d', '3d', '4d', '5d', '6d', '7d', '8d', '9d', 'Td', 'Jd', 'Qd', 'Kd', 'Ad']
-HiLo = [['2', '3', '4', '5', '6'], ['7', '8', '9'], ['T', 'J', 'Q', 'K', 'A']]
+numDecks = 2
+suits = ['♠', '♦', '♥', '♣']
+freshDeck = ['2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', 'T♣', 'J♣', 'Q♣', 'K♣', 'A♣',
+             '2♥', '3♥', '4♥', '5♥', '6♥', '7♥', '8♥', '9♥', 'T♥', 'J♥', 'Q♥', 'K♥', 'A♥',
+             '2♠', '3♠', '4♠', '5♠', '6♠', '7♠', '8♠', '9♠', 'T♠', 'J♠', 'Q♠', 'K♠', 'A♠',
+             '2♦', '3♦', '4♦', '5♦', '6♦', '7♦', '8♦', '9♦', 'T♦', 'J♦', 'Q♦', 'K♦', 'A♦']
+HiLo = [ ['2', '3', '4', '5', '6'], ['7', '8', '9'], ['T', 'J', 'Q', 'K', 'A'] ]
 minimum = 5
 maximum = 100
+playerCash = 500
 playerBet = minimum
 playerHand = []
 splitHand = []
 dealerHand = []
+dealerShows = []
 gameState = None
 
 # Shuffles a new deck depending on how many decks are being played with
 def shuffleDeck():
     result = []
-    for i in range(num_decks):
-        result += deck
+    for i in range(numDecks):
+        result += freshDeck
     random.shuffle(result)
     return result
 
@@ -62,7 +65,6 @@ def dealFrom(deck):
     dealerHand.append(drawFrom(deck) )
     playerHand.append(drawFrom(deck) )
     dealerHand.append(drawFrom(deck) )
-    print("Dealer Hand: [] " + dealerHand[1])
 
 # Adds one card to the players hand
 def hit(hand, deck):
@@ -71,6 +73,7 @@ def hit(hand, deck):
 # Doubles the players bet, gives them one more card, and prevents them from hitting again
 def double(hand, deck):
     global gameState
+    global playerBet
     hit(hand, deck)
     playerBet = playerBet * 2
     gameState = 'double'
@@ -138,10 +141,15 @@ def playHand(deck):
     global gameState
     global playerHand
     global dealerHand
+    global playerCash
+    global playerBet
     dealFrom(deck)
-        
+    dealerShows = dealerHand[:]
+    dealerShows[0] = '  '    
+    playerCash -= playerBet
     while not (playerBust() or (gameState == 'stand') or (gameState == 'double') or (handValue(playerHand) == 21) ):
-        print("Player " + printHand(playerHand) )
+        print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + "\n" + prettyPrintHand(dealerShows))
+        print("Player:\n" + prettyPrintHand(playerHand) )
         playerChoice = input("Do you want to:\n\t(H)it\n\t(S)tand\n\t(D)ouble\n\t(Sp)lit\n")
         if   playerChoice.lower() == 'h':
             hit(playerHand, deck)
@@ -155,27 +163,87 @@ def playHand(deck):
             print("Invalid input")
     
     if playerBust():
-        print("Player " + printHand(playerHand) )
-        print("You Bust")
+        print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + "\n" + prettyPrintHand(dealerShows))
+        print("Player:\n" + prettyPrintHand(playerHand) )
+        print("\n####################################################\n##################### You Bust #####################\n####################################################\n")
     else:
         playDealer(deck)
-        print("Player" + printHand(playerHand) )
-        print("Dealer" + printHand(dealerHand) )
         if playerHasBlackjack() and (handValue(dealerHand) != 21):
-            print("Blackjack!")
+            playerCash += ( (3 / 2) * playerBet) + playerBet
+            print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + "\n" + prettyPrintHand(dealerHand))
+            print("Player:\n" + prettyPrintHand(playerHand) )
+            print("\n####################################################\n#################### Blackjack! ####################\n####################################################\n")
         elif dealerBust() or (handValue(dealerHand) < handValue(playerHand) ):
-            print("You Win")
+            playerCash += 2 * playerBet
+            print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + "\n" + prettyPrintHand(dealerHand))
+            print("Player:\n" + prettyPrintHand(playerHand) )
+            print("\n####################################################\n##################### You Win ######################\n####################################################\n")
         elif handValue(dealerHand) == handValue(playerHand):
-            print("It's a Push")
+            playerCash += playerBet
+            print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + "\n" + prettyPrintHand(dealerHand))
+            print("Player:\n" + prettyPrintHand(playerHand) )
+            print("\n####################################################\n################### It's a Push ####################\n####################################################\n")
         else:
-            print("You Lose")
+            print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + "\n" + prettyPrintHand(dealerHand))
+            print("Player:\n" + prettyPrintHand(playerHand) )
+            print("\n####################################################\n##################### You Lose #####################\n####################################################\n")
 
 def playDealer(deck):
     global dealerHand
     while handValue(dealerHand) < 17:
         hit(dealerHand, deck)
-    
 
+def reset():
+    global playerHand
+    global splitHand
+    global dealerHand
+    global gameState
+    global playerBet
+    global minimum
+    playerHand = []
+    splitHand = []
+    dealerHand = []
+    gameState = None
+    playerBet = minimum
+
+def playGame():
+    deck = shuffleDeck()
+    while len(deck) > 10:
+        playHand(deck)
+        input("Contine?")
+        reset()
+
+def prettyPrintHand(hand): # ['6♣', 'Q♦',]
+    message = ""
+    for card in hand:
+        message += ('┌─────────┐ ')
+    message += ('\n')
+    for card in hand:
+        if card[0] == 'T':
+            message += ('│{}       │ '.format(10))
+        else:
+            message += ('│{}        │ '.format(card[0]))
+    message += ('\n')
+    for card in hand:
+        message += ('│         │ ')
+    message += ('\n')
+    for card in hand:
+        message += ('│    {}    │ '.format(card[1]))
+    message += ('\n')
+    for card in hand:
+        message += ('│         │ ')
+    message += ('\n')
+    for card in hand:
+        if card[0] == 'T':
+            message += ('│       {}│ '.format(10))
+        else:
+            message += ('│        {}│ '.format(card[0]))
+    message += ('\n')
+    for card in hand:
+        message += ('└─────────┘ ')
+    return message
+
+playGame()
 
 #----------------DEBUG------------------#
 def simulateFullDeck():
@@ -211,5 +279,6 @@ def simulateHand():
     deck = shuffleDeck()
     playHand(deck)
 
+# simulateHand()
 
-simulateHand()
+# print(prettyPrintHand(['6♣', 'A♦', 'T♥', 'K♠', '  ']))
