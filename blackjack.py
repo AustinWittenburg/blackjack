@@ -73,7 +73,7 @@ def double(hand, deck):
     global gameState
     hit(hand, deck)
     playerBet = playerBet * 2
-    gameState = None # Update later
+    gameState = 'double'
 
 # Splits the players hand into two
 def split(deck):
@@ -91,6 +91,7 @@ def stand():
     global gameState 
     gameState = 'stand'
 
+# Checks if the player has Blackjack
 def playerHasBlackjack():
     global playerHand
     if cardValue(playerHand[0]) == 10 and cardValue(playerHand[1]) == 11:
@@ -99,10 +100,12 @@ def playerHasBlackjack():
         return True
     return False
 
+# Checks if the player has busted
 def playerBust():
     global playerHand
     return handValue(playerHand) > 21
 
+# Checks if the dealer has busted
 def dealerBust():
     global dealerHand
     return handValue(dealerHand) > 21
@@ -122,11 +125,12 @@ def handValue(hand):
         else: sum += 1
     return sum
 
+# Prints the current hand passed to it
 def printHand(hand):
     message = "Hand: "
     for card in hand:
         message += card + " "
-    message += "\tValue: " + str(handValue(hand))
+    message += "\tValue: " + str(handValue(hand) )
     return message
 
 # Plays one hand of Blackjack
@@ -136,7 +140,7 @@ def playHand(deck):
     global dealerHand
     dealFrom(deck)
         
-    while (not playerBust()) and (gameState != 'stand') and (handValue(playerHand) != 21):
+    while not (playerBust() or (gameState == 'stand') or (gameState == 'double') or (handValue(playerHand) == 21) ):
         print("Player " + printHand(playerHand) )
         playerChoice = input("Do you want to:\n\t(H)it\n\t(S)tand\n\t(D)ouble\n\t(Sp)lit\n")
         if   playerChoice.lower() == 'h':
@@ -149,7 +153,9 @@ def playHand(deck):
             split(deck)
         else:
             print("Invalid input")
+    
     if playerBust():
+        print("Player " + printHand(playerHand) )
         print("You Bust")
     else:
         playDealer(deck)
@@ -169,7 +175,6 @@ def playDealer(deck):
     while handValue(dealerHand) < 17:
         hit(dealerHand, deck)
     
-
 
 
 #----------------DEBUG------------------#
