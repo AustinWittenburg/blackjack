@@ -49,8 +49,6 @@ basicStrategy = [ [ ['H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H' ]
                     ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 10s
                     ['P',  'P',  'P',  'P',  'P',  'P',  'P',  'P',  'P',  'P' ] ] ] # As
 
-
-
 minimum = 5
 maximum = 100
 playerCash = 500
@@ -63,6 +61,7 @@ gameState = None
 evalMessage = ''
 playerScore = 0
 numChoices = 0
+timesSplit = 0
 surrender = True
 
 # Calculates the computer's choice
@@ -172,7 +171,9 @@ def double(hand, deck):
 
 # Splits the players hand into two
 def split(deck, hand):
+    global timesSplit
     global splitHands # [ ['9♥', 'T♥'], ['9♠', '8♠'] ]
+    global gameState
     tempHand1 = []
     tempHand2 = []
     if playerCanSplit(hand):
@@ -187,6 +188,8 @@ def split(deck, hand):
         tempHand2.append(drawFrom(deck, True) )
         splitHands.append(tempHand1)
         splitHands.append(tempHand2)
+        gameState = 'split'
+        timesSplit += 1
     else:
         print("You cannot split with your current hand")
 
@@ -207,7 +210,8 @@ def playerHasSoftHand(hand):
     return numAces == 1
 
 def playerCanSplit(hand):
-    return hand[0][0] == hand[1][0] and len(hand) == 2
+    global timesSplit
+    return hand[0][0] == hand[1][0] and len(hand) == 2 and timesSplit < 3
 
 def playerCanDouble(hand):
     return len(hand) == 2
@@ -226,9 +230,8 @@ def playerHasBlackjack():
     return False
 
 # Checks if the player has busted
-def playerBust():
-    global playerHand
-    return handValue(playerHand) > 21
+def playerBust(hand):
+    return handValue(hand) > 21
 
 # Checks if the dealer has busted
 def dealerBust():
@@ -274,8 +277,8 @@ def printHand(hand):
     message += "\tValue: " + str(handValue(hand) )
     return message
 
-# Plays one hand of Blackjack
-def playHand(deck):
+def playOutSplitHands(deck):
+    global splitHands
     global gameState
     global playerHand
     global dealerHand
@@ -285,14 +288,58 @@ def playHand(deck):
     global playerScore
     global numChoices
     global count
-    # dealFrom(deck)
-    dealerHand = ['9♠', '4♥']
-    playerHand = ['A♠', 'A♠']
-    dealerShows = dealerHand[:]
-    dealerShows[0] = '  '    
-    playerCash -= playerBet
     playerChoice = ''
-    while not (playerBust() or (gameState == 'stand') or (gameState == 'double') or (gameState == 'surrender') or (handValue(playerHand) == 21) ):
+    hand = splitHands[-1]
+    finishedHands = []
+    while splitHands:
+        while not (playerBust(hand) or (gameState == 'stand') or (gameState == 'double') or (gameState == 'surrender') or (handValue(hand) == 21) ):
+            print("Dealer:\t\t\tCount: {}\t${:.2f}\n{}".format(count, playerCash, prettyPrintHand(dealerShows) ) )
+            print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(hand) ) )
+            comChoice = computerChoice(hand, cardValue(dealerHand[1]))
+            playerChoice = input("Do you want to:\n\t1. Hit\n\t2. Stand\n\t3. Double\n\t4. Split\n\t5. Surrender\n")
+            if evaluatePlayerChoice(playerChoice, comChoice, hand):
+                evalMessage = "Correct"
+                playerScore += 1
+            else:
+                evalMessage = "Wrong you're supposed to " + comChoice
+            numChoices += 1
+            if   playerChoice == '1':
+                hit(hand, deck)
+            elif playerChoice == '2':
+                stand()
+            elif playerChoice == '3':
+                double(hand, deck)
+            elif playerChoice == '4':
+                split(deck, hand)
+                playOutSplitHands(deck)
+            elif playerChoice == '5':
+                surrender()
+            elif playerChoice.lower() == 'q' or playerChoice.lower() == 'quit' or playerChoice.lower() == 'exit':
+                quit()
+            else:
+                print("Invalid input")
+        finishedHands.append(hand)
+        splitHands.pop()
+        if splitHands:
+            hand = splitHands[-1]
+            gameState = None
+    for h in finishedHands:
+        printResult(deck, h)
+
+
+def playOutHand(deck):
+    global gameState
+    global playerHand
+    global dealerHand
+    global playerCash
+    global playerBet
+    global evalMessage
+    global playerScore
+    global numChoices
+    global count
+    playerChoice = ''
+
+    while not (playerBust(playerHand) or (gameState == 'stand') or (gameState == 'double') or (gameState == 'surrender') or (handValue(playerHand) == 21) ):
         print("Dealer:\t\t\tCount: {}\t${:.2f}\n{}".format(count, playerCash, prettyPrintHand(dealerShows) ) )
         print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(playerHand) ) )
         comChoice = computerChoice(playerHand, cardValue(dealerHand[1]))
@@ -311,59 +358,123 @@ def playHand(deck):
             double(playerHand, deck)
         elif playerChoice == '4':
             split(deck, playerHand)
+            playOutSplitHands(deck)
+            return
         elif playerChoice == '5':
             surrender()
         elif playerChoice.lower() == 'q' or playerChoice.lower() == 'quit' or playerChoice.lower() == 'exit':
             quit()
         else:
             print("Invalid input")
-        
+    printResult(deck, playerHand)
+    
 
-    HiLoCount(dealerHand[0])
+def printBust(hand):
+    global playerCash
+    global playerBet
+    global evalMessage
+    global count
+    global dealerHand
+    print("Dealer:\t\t\tCount: {}\t${:.2f}\n{}".format(count, playerCash, prettyPrintHand(dealerHand) ) )
+    print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(hand) ) )
+    print("\n####################################################\n##################### You Bust #####################\n####################################################\n")
 
-    if playerBust():
-        print("Dealer:\t\t\tCount: {}\t${:.2f}\n{}".format(count, playerCash, prettyPrintHand(dealerHand) ) )
-        print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(playerHand) ) )
-        print("\n####################################################\n##################### You Bust #####################\n####################################################\n")
+def printSurrender(hand):
+    global playerCash
+    global playerBet
+    global evalMessage
+    global count
+    global dealerHand
+    winnings = playerBet/2
+    print("Dealer:\t\t\tCount: {}\t${:.2f} + ${:.2f}\n{}".format(count, playerCash, winnings, prettyPrintHand(dealerHand) ) )
+    print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(hand) ) )
+    print("\n####################################################\n#################### Surrender #####################\n####################################################\n")
+    playerCash += winnings
+
+def printBlackjack(hand):
+    global gameState
+    global playerCash
+    global playerBet
+    winnings = ( (3 / 2) * playerBet) + playerBet
+    print("Dealer:\t\t\tCount: {}\t${:.2f} + ${:.2f}\n{}".format(count, playerCash, winnings, prettyPrintHand(dealerHand) ) )
+    print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(hand) ) )
+    print("\n####################################################\n#################### Blackjack! ####################\n####################################################\n")
+    playerCash += winnings
+
+def printWin(hand):
+    global gameState
+    global playerCash
+    global playerBet
+    winnings = 2 * playerBet
+    print("Dealer:\t\t\tCount: {}\t${:.2f} + ${:.2f}\n{}".format(count, playerCash, winnings, prettyPrintHand(dealerHand) ) )
+    print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(hand) ) )
+    print("\n####################################################\n##################### You Win ######################\n####################################################\n")
+    playerCash += winnings
+
+def printPush(hand):
+    global gameState
+    global playerCash
+    global playerBet
+    winnings = playerBet
+    print("Dealer:\t\t\tCount: {}\t${:.2f} + ${:.2f}\n{}".format(count, playerCash, winnings, prettyPrintHand(dealerHand) ) )
+    print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(hand) ) )
+    print("\n####################################################\n################### It's a Push ####################\n####################################################\n")
+    playerCash += winnings
+
+def printLose(hand):
+    global gameState
+    global playerCash
+    global playerBet
+    print("Dealer:\t\t\tCount: {}\t${:.2f}\n{}".format(count, playerCash, prettyPrintHand(dealerHand) ) )
+    print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(hand) ) )
+    print("\n####################################################\n##################### You Lose #####################\n####################################################\n")
+
+def printResult(deck, hand):
+    global gameState
+    global playerCash
+    global playerBet
+    playerCash -= playerBet
+    if playerBust(hand):
+        printBust(hand)
     elif gameState == 'surrender':
-        winnings = playerBet/2
-        print("Dealer:\t\t\tCount: {}\t${:.2f} + ${:.2f}\n{}".format(count, playerCash, winnings, prettyPrintHand(dealerHand) ) )
-        print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(playerHand) ) )
-        print("\n####################################################\n#################### Surrender #####################\n####################################################\n")
-        playerCash += winnings
+        printSurrender(hand)
     else:
         playDealer(deck)
         if playerHasBlackjack() and (handValue(dealerHand) != 21):
-            winnings = ( (3 / 2) * playerBet) + playerBet
-            print("Dealer:\t\t\tCount: {}\t${:.2f} + ${:.2f}\n{}".format(count, playerCash, winnings, prettyPrintHand(dealerHand) ) )
-            print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(playerHand) ) )
-            print("\n####################################################\n#################### Blackjack! ####################\n####################################################\n")
-            playerCash += winnings
-        elif dealerBust() or (handValue(dealerHand) < handValue(playerHand) ):
-            winnings = 2 * playerBet
-            print("Dealer:\t\t\tCount: {}\t${:.2f} + ${:.2f}\n{}".format(count, playerCash, winnings, prettyPrintHand(dealerHand) ) )
-            print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(playerHand) ) )
-            print("\n####################################################\n##################### You Win ######################\n####################################################\n")
-            playerCash += winnings
-        elif handValue(dealerHand) == handValue(playerHand):
-            winnings = playerBet
-            print("Dealer:\t\t\tCount: {}\t${:.2f} + ${:.2f}\n{}".format(count, playerCash, winnings, prettyPrintHand(dealerHand) ) )
-            print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(playerHand) ) )
-            print("\n####################################################\n################### It's a Push ####################\n####################################################\n")
-            playerCash += winnings
+            printBlackjack(hand)
+        elif dealerBust() or (handValue(dealerHand) < handValue(hand) ):
+            printWin(hand)
+        elif handValue(dealerHand) == handValue(hand):
+            printPush(hand)
         else:
-            print("Dealer:\t\t\tCount: {}\t${:.2f}\n{}".format(count, playerCash, prettyPrintHand(dealerHand) ) )
-            print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(playerHand) ) )
-            print("\n####################################################\n##################### You Lose #####################\n####################################################\n")
+            printLose(hand)
+
+# Plays one hand of Blackjack
+def playHand(deck):
+    global playerHand
+    global dealerHand
+    global dealerShows
+    global playerScore
+    global numChoices
+    
+    dealFrom(deck)
+    # dealerHand = ['9♠', '4♥']
+    # playerHand = ['A♠', 'A♠']
+    dealerShows = dealerHand[:]
+    dealerShows[0] = '  '    
+    
+    playOutHand(deck)
+    
+    HiLoCount(dealerHand[0])
+    
 
 def playDealer(deck):
     global dealerHand
     while handValue(dealerHand) < 17:
         hit(dealerHand, deck)
 
-
-
 def reset():
+    global timesSplit
     global playerHand
     global splitHands
     global dealerHand
@@ -371,6 +482,7 @@ def reset():
     global playerBet
     global minimum
     global evalMessage
+    timesSplit = 0
     playerHand = []
     splitHands = []
     dealerHand = []
@@ -419,7 +531,7 @@ def prettyPrintHand(hand): # ['6♣', 'Q♦',]
         message += ('└─────────┘ ')
     return message
 
-# playGame()
+playGame()
 
 #----------------DEBUG------------------#
 def simulateFullDeck():
@@ -457,7 +569,7 @@ def simulateHand():
 
 # print(evaluatePlayerChoice('h', 'surrender'))
 
-simulateHand()
+# simulateHand()
 
 # print(prettyPrintHand(['6♣', 'A♦', 'T♥', 'K♠', '  ']))
 
