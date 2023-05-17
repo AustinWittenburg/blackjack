@@ -8,6 +8,24 @@ freshDeck = ['2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', 'T�
              '2♠', '3♠', '4♠', '5♠', '6♠', '7♠', '8♠', '9♠', 'T♠', 'J♠', 'Q♠', 'K♠', 'A♠',
              '2♦', '3♦', '4♦', '5♦', '6♦', '7♦', '8♦', '9♦', 'T♦', 'J♦', 'Q♦', 'K♦', 'A♦']
 HiLo = [ ['2', '3', '4', '5', '6'], ['7', '8', '9'], ['T', 'J', 'Q', 'K', 'A'] ]
+                #   2     3     4     5     6     7     8     9     10    A
+basicStrategy = [ ['H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H' ],  # 5
+                  ['H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H' ],  # 6
+                  ['H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H' ],  # 7
+                  ['H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H' ],  # 8
+                  ['H',  'DH', 'DH', 'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],  # 9
+                  ['DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'H',  'H' ],  # 10
+                  ['DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'H' ],  # 11
+                  ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'H',  'H',  'H' ],  # 12
+                  ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'H',  'H',  'H' ],  # 13
+                  ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'H',  'H',  'H' ],  # 14
+                  ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'H',  'UH', 'H' ],  # 15
+                  ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'UH', 'UH', 'UH'],  # 16
+                  ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],  # 17
+                  ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],  # 18
+                  ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],  # 19
+                  ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],  # 20
+                  ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ] ] # 21
 minimum = 5
 maximum = 100
 playerCash = 500
@@ -17,6 +35,27 @@ splitHand = []
 dealerHand = []
 dealerShows = []
 gameState = None
+
+# Calculates the computer's choice
+def computerChoice(playerVal, dealerVal):
+    global basicStrategy
+    choice = basicStrategy[playerVal - 5][dealerVal - 2]
+    if choice == 'H':
+        return 'hit'
+    elif choice == 'UH':
+        return 'surrender otherwise hit'
+    elif choice == 'DH':
+        return 'double otherwise hit'
+    elif choice == 'DS':
+        return 'double otherwise stand'
+    elif choice == 'S':
+        return 'stand'
+    elif choice == 'P':
+        return 'split'
+    elif choice == 'US':
+        return 'surrender otherwise stand'
+    else:
+        raise Exception("Error in calculating computerChoice")
 
 # Shuffles a new deck depending on how many decks are being played with
 def shuffleDeck():
@@ -200,6 +239,8 @@ def playDealer(deck):
     while handValue(dealerHand) < 17:
         hit(dealerHand, deck)
 
+
+
 def reset():
     global playerHand
     global splitHand
@@ -250,7 +291,7 @@ def prettyPrintHand(hand): # ['6♣', 'Q♦',]
         message += ('└─────────┘ ')
     return message
 
-playGame()
+# playGame()
 
 #----------------DEBUG------------------#
 def simulateFullDeck():
@@ -285,6 +326,8 @@ def simulateHandValue():
 def simulateHand():
     deck = shuffleDeck()
     playHand(deck)
+
+print(computerChoice(11, 8))
 
 # simulateHand()
 
