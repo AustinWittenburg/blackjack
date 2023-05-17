@@ -62,7 +62,7 @@ def dealFrom(deck):
     dealerHand.append(drawFrom(deck) )
     playerHand.append(drawFrom(deck) )
     dealerHand.append(drawFrom(deck) )
-    print("Dealer: [] " + dealerHand[1])
+    print("Dealer Hand: [] " + dealerHand[1])
 
 # Adds one card to the players hand
 def hit(hand, deck):
@@ -127,7 +127,7 @@ def printHand(hand):
     for card in hand:
         message += card + " "
     message += "\tValue: " + str(handValue(hand))
-    print(message)
+    return message
 
 # Plays one hand of Blackjack
 def playHand(deck):
@@ -137,7 +137,7 @@ def playHand(deck):
     dealFrom(deck)
         
     while (not playerBust()) and (gameState != 'stand') and (handValue(playerHand) != 21):
-        printHand(playerHand)
+        print("Player " + printHand(playerHand) )
         playerChoice = input("Do you want to:\n\t(H)it\n\t(S)tand\n\t(D)ouble\n\t(Sp)lit\n")
         if   playerChoice.lower() == 'h':
             hit(playerHand, deck)
@@ -153,8 +153,8 @@ def playHand(deck):
         print("You Bust")
     else:
         playDealer(deck)
-        printHand(playerHand)
-        printHand(dealerHand)
+        print("Player" + printHand(playerHand) )
+        print("Dealer" + printHand(dealerHand) )
         if playerHasBlackjack() and (handValue(dealerHand) != 21):
             print("Blackjack!")
         elif dealerBust() or (handValue(dealerHand) < handValue(playerHand) ):
