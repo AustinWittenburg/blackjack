@@ -74,7 +74,9 @@ def hit(hand, deck):
 def double(hand, deck):
     global gameState
     global playerBet
+    global playerCash
     hit(hand, deck)
+    playerCash -= playerBet
     playerBet = playerBet * 2
     gameState = 'double'
 
@@ -149,7 +151,7 @@ def playHand(deck):
     playerCash -= playerBet
     while not (playerBust() or (gameState == 'stand') or (gameState == 'double') or (handValue(playerHand) == 21) ):
         print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + "\n" + prettyPrintHand(dealerShows))
-        print("Player:\n" + prettyPrintHand(playerHand) )
+        print("Player:\t\t\tBet: " + str(playerBet) + "\n" + prettyPrintHand(playerHand) )
         playerChoice = input("Do you want to:\n\t(H)it\n\t(S)tand\n\t(D)ouble\n\t(Sp)lit\n")
         if   playerChoice.lower() == 'h':
             hit(playerHand, deck)
@@ -159,33 +161,38 @@ def playHand(deck):
             double(playerHand, deck)
         elif playerChoice.lower() == 'sp':
             split(deck)
+        elif playerChoice.lower() == 'q' or playerChoice.lower() == 'quit' or playerChoice.lower() == 'exit':
+            quit()
         else:
             print("Invalid input")
     
     if playerBust():
         print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + "\n" + prettyPrintHand(dealerShows))
-        print("Player:\n" + prettyPrintHand(playerHand) )
+        print("Player:\t\t\tBet: " + str(playerBet) + "\n" + prettyPrintHand(playerHand) )
         print("\n####################################################\n##################### You Bust #####################\n####################################################\n")
     else:
         playDealer(deck)
         if playerHasBlackjack() and (handValue(dealerHand) != 21):
-            playerCash += ( (3 / 2) * playerBet) + playerBet
-            print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + "\n" + prettyPrintHand(dealerHand))
-            print("Player:\n" + prettyPrintHand(playerHand) )
+            winnings = ( (3 / 2) * playerBet) + playerBet
+            print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + " + $" + str(winnings) + "\n" + prettyPrintHand(dealerHand))
+            print("Player:\t\t\tBet: " + str(playerBet) + "\n" + prettyPrintHand(playerHand) )
             print("\n####################################################\n#################### Blackjack! ####################\n####################################################\n")
+            playerCash += winnings
         elif dealerBust() or (handValue(dealerHand) < handValue(playerHand) ):
-            playerCash += 2 * playerBet
-            print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + "\n" + prettyPrintHand(dealerHand))
-            print("Player:\n" + prettyPrintHand(playerHand) )
+            winnings = 2 * playerBet
+            print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + " + $" + str(winnings) + "\n" + prettyPrintHand(dealerHand))
+            print("Player:\t\t\tBet: " + str(playerBet) + "\n" + prettyPrintHand(playerHand) )
             print("\n####################################################\n##################### You Win ######################\n####################################################\n")
+            playerCash += winnings
         elif handValue(dealerHand) == handValue(playerHand):
-            playerCash += playerBet
-            print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + "\n" + prettyPrintHand(dealerHand))
-            print("Player:\n" + prettyPrintHand(playerHand) )
+            winnings = playerBet
+            print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + " + $" + str(winnings) + "\n" + prettyPrintHand(dealerHand))
+            print("Player:\t\t\tBet: " + str(playerBet) + "\n" + prettyPrintHand(playerHand) )
             print("\n####################################################\n################### It's a Push ####################\n####################################################\n")
+            playerCash += winnings
         else:
             print("Dealer:\t\t\t\t\t\t$" + str(playerCash) + "\n" + prettyPrintHand(dealerHand))
-            print("Player:\n" + prettyPrintHand(playerHand) )
+            print("Player:\t\t\tBet: " + str(playerBet) + "\n" + prettyPrintHand(playerHand) )
             print("\n####################################################\n##################### You Lose #####################\n####################################################\n")
 
 def playDealer(deck):
