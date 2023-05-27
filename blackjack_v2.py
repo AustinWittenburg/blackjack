@@ -6,7 +6,7 @@ freshDeck = ['2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', 'T�
              '2♦', '3♦', '4♦', '5♦', '6♦', '7♦', '8♦', '9♦', 'T♦', 'J♦', 'Q♦', 'K♦', 'A♦']
 deck = []
 timesSplit = 0
-splitHandsPlayed = 1
+splitHandsPlayed = 0
 canSurrender = True
 count = 0
 HiLo = [ ['2', '3', '4', '5', '6'], ['7', '8', '9'], ['T', 'J', 'Q', 'K', 'A'] ]
@@ -28,16 +28,22 @@ def shuffleDeck():
 
 def dealHands():
     global dealerShows
-    playerHands.append(drawCard(True) )
-    dealerHand .append(drawCard(False) ) # Don't update count on dealers down card
-    playerHands.append(drawCard(True) )
-    dealerHand .append(drawCard(True) )
+    newHand = []
+    
+    newHand.append(drawCard(False) )
+    dealerHand.append(drawCard(True) ) # Don't update count on dealers down card
+    newHand.append(drawCard(False) )
+    dealerHand.append(drawCard(False) )
+
+    playerHands.append(newHand)
     dealerShows = dealerHand[:]
     dealerShows[0] = '  '
 
 def displayHands():
-    print("Dealer:\t\t\tCount: {}\t${:.2f}\n{}".format(count, playerCash, prettyPrintHand(dealerShows) ) )
-    print("Player:\t\t\tBet: ${:.2f}\t\t{}\n{}".format(playerBet, evalMessage, prettyPrintHand(playerHands) ) )
+    print("Dealer:\t\t\tCount: {}\t${:.2f}".format(count, playerCash) )
+    prettyPrintDealerHand(dealerShows)
+    print("Player:\t\t\tBet: ${:.2f}\t\t{}".format(playerBet, evalMessage) )
+    prettyPrintPlayerHand(playerHands)
 
 def giveOpitons():
     
@@ -107,6 +113,27 @@ def cardValue(card):
     else:
         return int(val)
 
+def prettyPrintDealerHand(hand):
+    message = ["", "", "", "", "", "", ""]
+
+    for card in hand:
+            message[0] +=     ('┌─────────┐ ')
+            if card[0] == 'T':
+                message[1] += ('│{:<2}       │ ').format(10)
+            else:
+                message[1] += ('│{:<2}       │ ').format(card[0])
+            message[2] +=     ('│         │ ')
+            message[3] +=     ('│    {}    │ '.format(card[1]))
+            message[4] +=     ('│         │ ')
+            if card[0] == 'T':
+                message[5] += ('│       {:<2}│ ').format(10)
+            else:
+                message[5] += ('│       {:<2}│ ').format(card[0])
+            message[6] +=     ('└─────────┘ ')
+
+    for line in message:
+        print(line)
+
 def prettyPrintPlayerHand(hand): # ['6♣', 'Q♦'] or [ [card0, card1], [card0, card1] ]
     message = ["", "", "", "", "", "", ""]
 
@@ -125,8 +152,9 @@ def prettyPrintPlayerHand(hand): # ['6♣', 'Q♦'] or [ [card0, card1], [card0,
         for j in range(7):
             message[j] += '|'
     
-    for i in range(7):
-        message[i] += ' '
+    if splitHandsPlayed != 0:
+        for i in range(7):
+            message[i] += ' '
     
     for i in range(splitHandsPlayed, len(hand)):
         for card in hand[i]:
@@ -150,36 +178,18 @@ def prettyPrintPlayerHand(hand): # ['6♣', 'Q♦'] or [ [card0, card1], [card0,
     for line in message:
         print(line)
 
-    # Single hand
-    # message = ""
-    # for card in hand:
-    #     message += ('┌─────────┐ ')
-    # message += ('\n')
-    # for card in hand:
-    #     message += ('│{:<2}       │ '.format(card[0]))
-    # message += ('\n')
-    # for card in hand:
-    #     message += ('│         │ ')
-    # message += ('\n')
-    # for card in hand:
-    #     message += ('│    {}    │ '.format(card[1]))
-    # message += ('\n')
-    # for card in hand:
-    #     message += ('│         │ ')
-    # message += ('\n')
-    # for card in hand:
-    #     message += ('│       {:<2}│ '.format(card[0]))
-    # message += ('\n')
-    # for card in hand:
-    #     message += ('└─────────┘ ')
-    # return message
-
 def hit(hand):
-    hand.append(drawCard(True) )
+    hand.append(drawCard(False) )
 
 def playGame():
     shuffleDeck()
     dealHands()
+    displayHands()
+
+
+
+playGame()
+
 
 #----------------DEBUG------------------#
 def testPrinting():
@@ -198,7 +208,14 @@ def testPrinting():
 def testMultiPrinting():
     prettyPrintPlayerHand([['6♣', 'Q♦', '4♣'], ['4♣', 'T♦'], ['9♣', '5♦']])
 
-testMultiPrinting()
+def testDealerPrinting():
+    prettyPrintDealerHand(['  ', 'Q♦'])
+
+
+
+# testDealerPrinting()
+
+# testMultiPrinting()
 
 # testPrinting()
 
