@@ -461,7 +461,7 @@ def playHand(deck):
     # dealerHand = ['9♠', '4♥']
     # playerHand = ['A♠', 'A♠']
     dealerShows = dealerHand[:]
-    dealerShows[0] = '  '    
+    dealerShows[0] = '  '
     
     playOutHand(deck)
     
