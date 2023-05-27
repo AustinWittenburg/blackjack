@@ -12,8 +12,10 @@ count = 0
 HiLo = [ ['2', '3', '4', '5', '6'], ['7', '8', '9'], ['T', 'J', 'Q', 'K', 'A'] ]
 evalMessage = ""
 playerOptions = ["Hit", "Stand", "Double", "Split", "Surrender"]
+possibleOptions = []
 playerCash = 500
 playerBet = 5
+playerChoice = ""
 playerHands = [] # [ [card0, card1], [card0, card1] ] Multiple hands are optional
 dealerHand  = [] #   [card0, card1]
 dealerShows = []
@@ -46,7 +48,30 @@ def displayHands():
     prettyPrintPlayerHand(playerHands)
 
 def giveOpitons():
-    
+    global possibleOptions
+    possibleOptions = ["Hit", "Stand"]
+    if playerCanDouble:
+        possibleOptions.append("Double")
+    if playerCanSplit:
+        possibleOptions.append("Split")
+    if playerCanSurrender:
+        possibleOptions.append("Surrender")
+    displayOptions()
+
+def displayOptions():
+    optionNum = 0
+    for option in possibleOptions:
+        optionNum += 1
+        print("\t{}. {}".format(optionNum, option))
+
+def getPlayerChoice():
+    global playerChoice
+    userInput = input()
+    if userInput == "q" or userInput == "quit" or userInput == "exit":
+        exit()
+    playerChoice = possibleOptions[int(userInput)]
+
+def executePlayerChoice():
     pass
 
 def HiLoCount(card):
@@ -185,7 +210,9 @@ def playGame():
     shuffleDeck()
     dealHands()
     displayHands()
-
+    giveOpitons()
+    getPlayerChoice()
+    executePlayerChoice()
 
 
 playGame()
