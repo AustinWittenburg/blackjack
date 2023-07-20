@@ -95,7 +95,7 @@ def evaluatePlayerChoice(playerChoice, comChoice, hand):
         return playerChoice == '1'
     elif comChoice == 'surrender otherwise hit':
         if playerCanSurrender():
-            return playerChoice == '2'
+            return playerChoice == '5'
         else:
             return playerChoice == '1'
     elif comChoice == 'double otherwise hit':
