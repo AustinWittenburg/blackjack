@@ -64,7 +64,7 @@ def displayOptions():
     for option in possibleOptions:
         optionNum += 1
         print("\t{}. {}".format(optionNum, option))
-    for _ in range(4 - len(possibleOptions)):
+    for _ in range(5 - len(possibleOptions)):
         print()
 
 def getPlayerChoice():
@@ -72,7 +72,12 @@ def getPlayerChoice():
     userInput = input()
     if userInput == "q" or userInput == "quit" or userInput == "exit":
         exit()
-    playerChoice = possibleOptions[int(userInput) - 1]
+    elif userInput == '':
+        displayHands()
+        giveOpitons(playerHands[currentHand])
+        getPlayerChoice()
+    else:
+        playerChoice = possibleOptions[int(userInput) - 1]
 
 def executePlayerChoice(hand):
     # execute = {
@@ -262,7 +267,7 @@ def printOutcomes(): # Change to calculate outcomes based on each individual han
             printLose(playerHands[i])
 
     print(outcomeMessage)
-    print("\n\n")
+    print("\n\n\n")
 
 def printBust(hand):
     global outcomeMessage
@@ -288,7 +293,7 @@ def printPush(hand):
 
 def printBlackjack(hand):
     global outcomeMessage, playerCash
-    playerCash += playerBet * 1.5
+    playerCash += playerBet * 2.5
     length = len(hand) * 3 + 3
     outcomeMessage += ("{:*^" + str(length) + "}").format("BlackJack")
 
@@ -318,7 +323,6 @@ def double(hand):
 def split(hand):
     global playerBet, playerCash
     playerCash -= playerBet
-    playerBet = playerBet * 2
     copy = hand[:]
     tempHand1 = []
     tempHand2 = []
@@ -333,7 +337,6 @@ def split(hand):
 def surrender():
     global playerCash, surrenderIndex
     surrenderIndex.append(currentHand)
-    playerCash += playerBet/2
     stand()
 
 def playDealerHand():
@@ -344,8 +347,7 @@ def playDealerHand():
         dealerHand.append(drawCard(False))
 
 def playHands():
-    global currentHand, goToNextHand, playerCash
-    playerCash -= playerBet
+    global currentHand, goToNextHand
     while len(playerHands) > currentHand:
         displayHands()
         if playerHasBlackjack(currentHand):
@@ -356,11 +358,11 @@ def playHands():
             executePlayerChoice(playerHands[currentHand])
         if goToNextHand:
             currentHand += 1
-            goToNextHand = False   
+            goToNextHand = False
 
 def reset():
     global timesSplit, currentHand, evalMessage, playerOptions, playerChoice, outcomeMessage, surrenderIndex
-    global possibleOptions, playerCash, playerBet, playerHands, dealerHand, dealerShows
+    global possibleOptions, playerBet, playerHands, dealerHand, dealerShows
     timesSplit = 0
     currentHand = 0
     surrenderIndex = []
@@ -369,7 +371,6 @@ def reset():
     playerChoice = ""
     outcomeMessage = ""
     possibleOptions = []
-    playerCash = 500
     playerBet = 5
     playerHands = []
     dealerHand  = []
