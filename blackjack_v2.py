@@ -7,7 +7,6 @@ freshDeck = ['2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', 'T�
 deck = []
 timesSplit = 0
 currentHand = 0
-splitHandsPlayed = 0
 canSurrender = True
 surrenderIndex = []
 count = 0
@@ -19,9 +18,8 @@ possibleOptions = []
 playerCash = 500
 playerBet = 5
 playerHands = [] # [ [card0, card1], [card0, card1] ] Multiple hands are optional
-playerOutcomes = []
 dealerHand  = [] #   [card0, card1]
-dealerShows = []
+dealerShows = [] #   [' '  , card1]
 numDecks = 5
 outcomeMessage = ""
 goToNextHand = False
@@ -263,26 +261,6 @@ def printOutcomes(): # Change to calculate outcomes based on each individual han
         elif playerScore < dealerScore:
             printLose(playerHands[i])
 
-    for i in range(len(playerOutcomes)):
-        outcome = playerOutcomes[i]
-        if outcome == "Blackjack":
-            if dealerHasBlackjack():
-                printPush(playerHands[i])
-            else:
-                printBlackjack(playerHands[i])
-        if outcome == "Bust":
-            printBust(playerHands[i])
-        if outcome == "Surrender":
-            printSurrender(playerHands[i])
-        if outcome == None:
-            dealerScore = handValue(dealerHand)
-            playerScore = handValue(playerHands[i])
-            if playerScore == dealerScore:
-                printPush(playerHands[i])
-            elif playerScore > dealerScore or dealerBust():
-                printWin(playerHands[i])
-            elif playerScore < dealerScore:
-                printLose(playerHands[i])
     print(outcomeMessage)
     print("\n\n")
 
@@ -292,7 +270,8 @@ def printBust(hand):
     outcomeMessage += ("{:*^" + str(length) + "}").format("Bust")
 
 def printWin(hand):
-    global outcomeMessage
+    global outcomeMessage, playerCash
+    playerCash += playerBet * 2
     length = len(hand) * 3 + 3
     outcomeMessage += ("{:*^" + str(length) + "}").format("Win")
 
@@ -302,17 +281,20 @@ def printLose(hand):
     outcomeMessage += ("{:*^" + str(length) + "}").format("Lose")
 
 def printPush(hand):
-    global outcomeMessage
+    global outcomeMessage, playerCash
+    playerCash += playerBet
     length = len(hand) * 3 + 3
     outcomeMessage += ("{:*^" + str(length) + "}").format("Push")
 
 def printBlackjack(hand):
-    global outcomeMessage
+    global outcomeMessage, playerCash
+    playerCash += playerBet * 1.5
     length = len(hand) * 3 + 3
     outcomeMessage += ("{:*^" + str(length) + "}").format("BlackJack")
 
 def printSurrender(hand):
-    global outcomeMessage
+    global outcomeMessage, playerCash
+    playerCash += playerBet/2
     length = len(hand) * 3 + 3
     outcomeMessage += ("{:*^" + str(length) + "}").format("Surrender")
 
@@ -323,8 +305,7 @@ def hit(hand):
         stand()
 
 def stand():
-    global splitHandsPlayed, goToNextHand
-    # splitHandsPlayed += 1
+    global goToNextHand
     goToNextHand = True
 
 def double(hand):
@@ -378,11 +359,11 @@ def playHands():
             goToNextHand = False   
 
 def reset():
-    global timesSplit, currentHand, splitHandsPlayed, evalMessage, playerOptions, playerChoice, outcomeMessage
-    global possibleOptions, playerCash, playerBet, playerHands, dealerHand, dealerShows, playerOutcomes
+    global timesSplit, currentHand, evalMessage, playerOptions, playerChoice, outcomeMessage, surrenderIndex
+    global possibleOptions, playerCash, playerBet, playerHands, dealerHand, dealerShows
     timesSplit = 0
     currentHand = 0
-    splitHandsPlayed = 0
+    surrenderIndex = []
     evalMessage = ""
     playerOptions = ["Hit", "Stand", "Double", "Split", "Surrender"]
     playerChoice = ""
@@ -391,7 +372,6 @@ def reset():
     playerCash = 500
     playerBet = 5
     playerHands = []
-    playerOutcomes = []
     dealerHand  = []
     dealerShows = []
 
