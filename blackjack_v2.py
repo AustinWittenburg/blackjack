@@ -9,6 +9,7 @@ timesSplit = 0
 currentHand = 0
 splitHandsPlayed = 0
 canSurrender = True
+surrenderIndex = []
 count = 0
 HiLo = [ ['2', '3', '4', '5', '6'], ['7', '8', '9'], ['T', 'J', 'Q', 'K', 'A'] ]
 evalMessage = ""
@@ -23,6 +24,7 @@ dealerHand  = [] #   [card0, card1]
 dealerShows = []
 numDecks = 5
 outcomeMessage = ""
+goToNextHand = False
 
 def shuffleDeck():
     global deck
@@ -75,6 +77,14 @@ def getPlayerChoice():
     playerChoice = possibleOptions[int(userInput) - 1]
 
 def executePlayerChoice(hand):
+    # execute = {
+    #     "Hit"       : print(hand),
+    #     "Stand"     : stand(),
+    #     "Double"    : double(hand),
+    #     "Split"     : split(hand),
+    #     "Surrender" : surrender()
+    # }
+    # execute[playerChoice]
     if playerChoice == "Hit":
         hit(hand)
     if playerChoice == "Stand":
@@ -113,10 +123,10 @@ def handValue(hand):
         else: sum += 1
     return sum
 
-def playerHasBlackjack():
-    if cardValue(playerHands[currentHand][0]) == 10 and cardValue(playerHands[currentHand][1]) == 11:
+def playerHasBlackjack(handIndex):
+    if cardValue(playerHands[handIndex][0]) == 10 and cardValue(playerHands[handIndex][1]) == 11:
         return True
-    if cardValue(playerHands[currentHand][1]) == 10 and cardValue(playerHands[currentHand][0]) == 11:
+    if cardValue(playerHands[handIndex][1]) == 10 and cardValue(playerHands[handIndex][0]) == 11:
         return True
     return False
 
@@ -188,11 +198,11 @@ def prettyPrintDealerHand(hand): # ['6♣', 'Q♦']
     for line in message:
         print(line)
 
-def prettyPrintPlayerHand(hand): # [ [card0, card1], [card0, card1], ... ]
+def prettyPrintPlayerHand(hands): # [ [card0, card1], [card0, card1], ... ]
     message = ["", "", "", "", "", "", ""]
 
-    for i in range(splitHandsPlayed):
-        for card in hand[i]:
+    for i in range(currentHand):
+        for card in hands[i]:
             message[0] +=     ('┌───')
             if card[0] == 'T':
                 message[1] += ('│{:<2} ').format(10)
@@ -206,12 +216,13 @@ def prettyPrintPlayerHand(hand): # [ [card0, card1], [card0, card1], ... ]
         for j in range(7):
             message[j] += '|  '
     
-    if splitHandsPlayed != 0:
+    # if splitHandsPlayed != 0:
+    if currentHand > 0:
         for i in range(7):
             message[i] += ' '
     
-    for i in range(splitHandsPlayed, len(hand)):
-        for card in hand[i]:
+    for i in range(currentHand, len(hands)):
+        for card in hands[i]:
             message[0] +=     ('┌─────────┐ ')
             if card[0] == 'T':
                 message[1] += ('│{:<2}       │ ').format(10)
@@ -225,14 +236,33 @@ def prettyPrintPlayerHand(hand): # [ [card0, card1], [card0, card1], ... ]
             else:
                 message[5] += ('│       {:<2}│ ').format(card[0])
             message[6] +=     ('└─────────┘ ')
-        if i+1 != len(hand):
+        if i+1 != len(hands):
             for j in range(7):
                 message[j] += '| '
 
     for line in message:
         print(line)    
 
-def printOutcomes():
+def printOutcomes(): # Change to calculate outcomes based on each individual hand
+    dealerScore = handValue(dealerHand)
+    for i in range(len(playerHands)):
+        playerScore = handValue(playerHands[i])
+        if playerHasBlackjack(i):
+            if dealerHasBlackjack():
+                printPush(playerHands[i])
+            else:
+                printBlackjack(playerHands[i])
+        if i in surrenderIndex:
+            printSurrender(playerHands[i])
+        elif playerBust(playerHands[i]):
+            printBust(playerHands[i])
+        elif playerScore == dealerScore:
+            printPush(playerHands[i])
+        elif playerScore > dealerScore or dealerBust():
+            printWin(playerHands[i])
+        elif playerScore < dealerScore:
+            printLose(playerHands[i])
+
     for i in range(len(playerOutcomes)):
         outcome = playerOutcomes[i]
         if outcome == "Blackjack":
@@ -290,37 +320,24 @@ def printSurrender(hand):
 def hit(hand):
     hand.append(drawCard(False) )
     if playerBust(hand):
-        playerOutcomes.append("Bust")
         stand()
-    else:
-        playHand()
 
 def stand():
-    global currentHand, splitHandsPlayed, playerChoice
-    playerChoice = ""
-    if currentHand + 1 == len(playerHands):
-        if not playerBust(playerHands[currentHand]):
-            playerOutcomes.append(None)
-        return
-    playerOutcomes.append(None)
-    currentHand += 1
-    splitHandsPlayed += 1
-
-    playHand()
+    global splitHandsPlayed, goToNextHand
+    # splitHandsPlayed += 1
+    goToNextHand = True
 
 def double(hand):
-    global playerBet
-    playerCash - playerBet
+    global playerBet, playerCash
+    playerCash -= playerBet
     playerBet = playerBet * 2
     hand.append(drawCard(False) )
-    if playerBust(hand):
-        playerOutcomes.append("Bust")
-        stand()
-    playerOutcomes.append(None)
+    stand()
 
 def split(hand):
     global playerBet, playerCash
     playerCash -= playerBet
+    playerBet = playerBet * 2
     copy = hand[:]
     tempHand1 = []
     tempHand2 = []
@@ -331,11 +348,10 @@ def split(hand):
     playerHands.remove(hand)
     playerHands.append(tempHand1)
     playerHands.append(tempHand2)
-    playHand()
 
 def surrender():
-    global playerCash
-    playerOutcomes.append(None)
+    global playerCash, surrenderIndex
+    surrenderIndex.append(currentHand)
     playerCash += playerBet/2
     stand()
 
@@ -346,16 +362,20 @@ def playDealerHand():
     while handValue(dealerHand) < 17:
         dealerHand.append(drawCard(False))
 
-def playHand():
-    global currentHand
-    displayHands()
-    if playerHasBlackjack():
-        currentHand += 1
-        playerOutcomes.append("Blackjack")
-    else:
-        giveOpitons(playerHands[currentHand])
-        getPlayerChoice()
-        executePlayerChoice(playerHands[currentHand])
+def playHands():
+    global currentHand, goToNextHand, playerCash
+    playerCash -= playerBet
+    while len(playerHands) > currentHand:
+        displayHands()
+        if playerHasBlackjack(currentHand):
+            currentHand += 1
+        else:
+            giveOpitons(playerHands[currentHand])
+            getPlayerChoice()
+            executePlayerChoice(playerHands[currentHand])
+        if goToNextHand:
+            currentHand += 1
+            goToNextHand = False   
 
 def reset():
     global timesSplit, currentHand, splitHandsPlayed, evalMessage, playerOptions, playerChoice, outcomeMessage
@@ -379,7 +399,7 @@ def playGame():
     shuffleDeck()
     while len(deck) > 10:
         dealHands()
-        playHand()
+        playHands()
         playDealerHand()
         displayHands()
         printOutcomes()
