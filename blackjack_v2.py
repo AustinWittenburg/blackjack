@@ -65,7 +65,7 @@ def displayOptions():
         optionNum += 1
         print("\t{}. {}".format(optionNum, option))
     for _ in range(4 - len(possibleOptions)):
-        print("\n")
+        print()
 
 def getPlayerChoice():
     global playerChoice
@@ -254,7 +254,7 @@ def printOutcomes():
             elif playerScore < dealerScore:
                 printLose(playerHands[i])
     print(outcomeMessage)
-    print("\n\n\n")
+    print("\n\n")
 
 def printBust(hand):
     global outcomeMessage
@@ -328,7 +328,8 @@ def split(hand):
     tempHand2.append(copy.pop() )
     tempHand1.append(drawCard(False) )
     tempHand2.append(drawCard(False) )
-    hand = tempHand1
+    playerHands.remove(hand)
+    playerHands.append(tempHand1)
     playerHands.append(tempHand2)
     playHand()
 
