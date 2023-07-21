@@ -4,6 +4,46 @@ freshDeck = ['2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', 'T�
              '2♥', '3♥', '4♥', '5♥', '6♥', '7♥', '8♥', '9♥', 'T♥', 'J♥', 'Q♥', 'K♥', 'A♥',
              '2♠', '3♠', '4♠', '5♠', '6♠', '7♠', '8♠', '9♠', 'T♠', 'J♠', 'Q♠', 'K♠', 'A♠',
              '2♦', '3♦', '4♦', '5♦', '6♦', '7♦', '8♦', '9♦', 'T♦', 'J♦', 'Q♦', 'K♦', 'A♦']
+                    # 2     3     4     5     6     7     8     9     10    A
+basicStrategy = [ [ ['H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H' ],    # 4
+                    ['H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H' ],    # 5
+                    ['H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H' ],    # 6
+                    ['H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H' ],    # 7
+                    ['H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H' ],    # 8
+                    ['H',  'DH', 'DH', 'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 9
+                    ['DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'H',  'H' ],    # 10
+                    ['DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'H' ],    # 11
+                    ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'H',  'H',  'H' ],    # 12
+                    ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'H',  'H',  'H' ],    # 13
+                    ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'H',  'H',  'H' ],    # 14
+                    ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'H',  'UH', 'H' ],    # 15
+                    ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'UH', 'UH', 'UH'],    # 16
+                    ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 17
+                    ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 18
+                    ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 19
+                    ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 20
+                    ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ] ],  # 21
+    # Soft Totals     2     3     4     5     6     7     8     9     10    A
+                  [ ['H',  'H',  'H',  'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 13
+                    ['H',  'H',  'H',  'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 14
+                    ['H',  'H',  'DH', 'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 15
+                    ['H',  'H',  'DH', 'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 16
+                    ['H',  'DH', 'DH', 'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 17
+                    ['S',  'DS', 'DS', 'DS', 'DS', 'S',  'S',  'H',  'H',  'H' ],    # 18
+                    ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 19
+                    ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 20
+                    ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ] ],  # 21
+    # Pairs           2     3     4     5     6     7     8     9     10    A
+                  [ ['P',  'P',  'P',  'P',  'P',  'P',  'H',  'H',  'H',  'H' ],    # 2s
+                    ['P',  'P',  'P',  'P',  'P',  'P',  'H',  'H',  'H',  'H' ],    # 3s
+                    ['H',  'H',  'H',  'P',  'P',  'H',  'H',  'H',  'H',  'H' ],    # 4s
+                    ['DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'H',  'H' ],    # 5s
+                    ['P',  'P',  'P',  'P',  'P',  'H',  'H',  'H',  'H',  'H' ],    # 6s
+                    ['P',  'P',  'P',  'P',  'P',  'P',  'H',  'H',  'H',  'H' ],    # 7s
+                    ['P',  'P',  'P',  'P',  'P',  'P',  'P',  'P',  'P',  'P' ],    # 8s
+                    ['P',  'P',  'P',  'P',  'P',  'S',  'P',  'P',  'S',  'S' ],    # 9s
+                    ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 10s
+                    ['P',  'P',  'P',  'P',  'P',  'P',  'P',  'P',  'P',  'P' ] ] ] # As
 deck = []
 timesSplit = 0
 currentHand = 0
@@ -12,6 +52,7 @@ surrenderIndex = []
 count = 0
 HiLo = [ ['2', '3', '4', '5', '6'], ['7', '8', '9'], ['T', 'J', 'Q', 'K', 'A'] ]
 evalMessage = ""
+evalHand = []
 playerOptions = ["Hit", "Stand", "Double", "Split", "Surrender"]
 playerChoice = ""
 possibleOptions = []
@@ -24,6 +65,7 @@ numDecks = 5
 outcomeMessage = ""
 goToNextHand = False
 
+#-------------Setup--------------#
 def shuffleDeck():
     global deck
     for _ in range(numDecks):
@@ -42,10 +84,16 @@ def dealHands():
     dealerShows = dealerHand[:]
     dealerShows[0] = '  '
 
+def drawCard(DealerDownCard):
+    card = deck.pop()
+    if not DealerDownCard:
+        HiLoCount(card)
+    return card
+
 def displayHands():
-    print("Dealer:\t\t\tCount: {}\t${:.2f}".format(count, playerCash) )
+    print("Dealer:\t\tCount: {}\t${:.2f}".format(count, playerCash) )
     prettyPrintDealerHand(dealerShows)
-    print("Player:\t\t\tBet: ${:.2f}\t\t{}".format(playerBet, evalMessage) )
+    print("Player:\t\tBet/Hand: ${:.2f}\t\t{}".format(playerBet, evalMessage) )
     prettyPrintPlayerHand(playerHands)
 
 def giveOpitons(hand):
@@ -67,8 +115,9 @@ def displayOptions():
     for _ in range(5 - len(possibleOptions)):
         print()
 
+#-----------Evaluation-----------#
 def getPlayerChoice():
-    global playerChoice
+    global playerChoice, evalMessage
     userInput = input()
     if userInput == "q" or userInput == "quit" or userInput == "exit":
         exit()
@@ -78,6 +127,64 @@ def getPlayerChoice():
         getPlayerChoice()
     else:
         playerChoice = possibleOptions[int(userInput) - 1]
+        comChoice = computerChoice(evalHand, cardValue(dealerHand[1]) )
+        if evaluatePlayerChoice(playerChoice, comChoice, evalHand):
+            evalMessage = "Correct"
+        else:
+            evalMessage = "Wrong you're supposed to " + comChoice
+
+def computerChoice(hand, dealerVal):
+    if playerHasSoftHand(hand):
+        choice = basicStrategy[1][handValue(hand) - 13][dealerVal - 2]
+    elif playerCanSplit(hand):
+        choice = basicStrategy[2][cardValue(hand[0]) - 2][dealerVal - 2]
+    else:
+        choice = basicStrategy[0][handValue(hand) - 4][dealerVal - 2]
+    if choice == 'H':
+        return 'hit'
+    elif choice == 'UH':
+        return 'surrender otherwise hit'
+    elif choice == 'DH':
+        return 'double otherwise hit'
+    elif choice == 'DS':
+        return 'double otherwise stand'
+    elif choice == 'S':
+        return 'stand'
+    elif choice == 'P':
+        return 'split'
+    elif choice == 'US':
+        return 'surrender otherwise stand'
+    else:
+        raise Exception("Error in calculating computerChoice")
+    
+def evaluatePlayerChoice(playerChoice, comChoice, hand):
+    if comChoice == 'hit':
+        return playerChoice == 'Hit'
+    elif comChoice == 'surrender otherwise hit':
+        if playerCanSurrender():
+            return playerChoice == 'Surrender'
+        else:
+            return playerChoice == 'Hit'
+    elif comChoice == 'double otherwise hit':
+        if playerCanDouble(hand):
+            return playerChoice == 'Double'
+        else:
+            return playerChoice == 'Hit'
+    elif comChoice == 'double otherwise stand':
+        if playerCanDouble(hand):
+            return playerChoice == 'Double'
+        else:
+            return playerChoice == 'Stand'
+    elif comChoice == 'stand':
+        return playerChoice == 'Stand'
+    elif comChoice == 'split':
+        return playerChoice == 'Split'
+    elif comChoice == 'surrender otherwise stand':
+        if playerCanSurrender():
+            return playerChoice == 'Surrender'
+        else:
+            return playerChoice == 'Stand'
+    return False
 
 def executePlayerChoice(hand):
     # execute = {
@@ -106,12 +213,7 @@ def HiLoCount(card):
     elif card[0] in HiLo[2]:
         count -= 1
 
-def drawCard(DealerDownCard):
-    card = deck.pop()
-    if not DealerDownCard:
-        HiLoCount(card)
-    return card
-
+#----------Hand Checks-----------#
 def handValue(hand):
     sum = 0
     numAces = 0
@@ -177,9 +279,7 @@ def cardValue(card):
     else:
         return int(val)
 
-def playerHasMoreHands():
-    return currentHand + 1 < len(playerHands)
-
+#---------Print Functions---------#
 def prettyPrintDealerHand(hand): # ['6♣', 'Q♦']
     message = ["", "", "", "", "", "", ""]
 
@@ -246,7 +346,7 @@ def prettyPrintPlayerHand(hands): # [ [card0, card1], [card0, card1], ... ]
     for line in message:
         print(line)    
 
-def printOutcomes(): # Change to calculate outcomes based on each individual hand
+def printOutcomes():
     dealerScore = handValue(dealerHand)
     for i in range(len(playerHands)):
         playerScore = handValue(playerHands[i])
@@ -303,7 +403,7 @@ def printSurrender(hand):
     length = len(hand) * 3 + 3
     outcomeMessage += ("{:*^" + str(length) + "}").format("Surrender")
 
-# ---------Player Options----------
+# ---------Player Options----------#
 def hit(hand):
     hand.append(drawCard(False) )
     if playerBust(hand):
@@ -321,7 +421,8 @@ def double(hand):
     stand()
 
 def split(hand):
-    global playerBet, playerCash
+    global playerBet, playerCash, timesSplit
+    timesSplit += 1
     playerCash -= playerBet
     copy = hand[:]
     tempHand1 = []
@@ -347,8 +448,9 @@ def playDealerHand():
         dealerHand.append(drawCard(False))
 
 def playHands():
-    global currentHand, goToNextHand
+    global currentHand, goToNextHand, evalHand
     while len(playerHands) > currentHand:
+        evalHand = playerHands[currentHand]
         displayHands()
         if playerHasBlackjack(currentHand):
             currentHand += 1
