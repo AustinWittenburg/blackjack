@@ -58,6 +58,7 @@ playerChoice = ""
 possibleOptions = []
 playerCash = 500
 playerBet = 5
+currentHandBet = 5
 playerHands = [] # [ [card0, card1], [card0, card1] ] Multiple hands are optional
 dealerHand  = [] #   [card0, card1]
 dealerShows = [] #   [' '  , card1]
@@ -93,7 +94,7 @@ def drawCard(DealerDownCard):
 def displayHands():
     print("Dealer:\t\tCount: {}\t${:.2f}".format(count, playerCash) )
     prettyPrintDealerHand(dealerShows)
-    print("Player:\t\tBet/Hand: ${:.2f}\t\t{}".format(playerBet, evalMessage) )
+    print("Player:\t\tBet: ${:.2f}\t{}".format(currentHandBet, evalMessage) )
     prettyPrintPlayerHand(playerHands)
 
 def giveOpitons(hand):
@@ -244,10 +245,13 @@ def dealerHasBlackjack():
 
 def playerHasSoftHand(hand):
     numAces = 0
+    softTotal = 0
     for card in hand:
         if card[0] == 'A':
             numAces += 1
-    return numAces == 1
+        else:
+            softTotal += cardValue(card)
+    return numAces == 1 and softTotal < 11
 
 def playerCanSplit(hand):
     return hand[0][0] == hand[1][0] and len(hand) == 2 and timesSplit < 3
@@ -355,7 +359,7 @@ def printOutcomes():
                 printPush(playerHands[i])
             else:
                 printBlackjack(playerHands[i])
-        if i in surrenderIndex:
+        elif i in surrenderIndex:
             printSurrender(playerHands[i])
         elif playerBust(playerHands[i]):
             printBust(playerHands[i])
@@ -376,7 +380,7 @@ def printBust(hand):
 
 def printWin(hand):
     global outcomeMessage, playerCash
-    playerCash += playerBet * 2
+    playerCash += currentHandBet * 2
     length = len(hand) * 3 + 3
     outcomeMessage += ("{:*^" + str(length) + "}").format("Win")
 
@@ -387,19 +391,19 @@ def printLose(hand):
 
 def printPush(hand):
     global outcomeMessage, playerCash
-    playerCash += playerBet
+    playerCash += currentHandBet
     length = len(hand) * 3 + 3
     outcomeMessage += ("{:*^" + str(length) + "}").format("Push")
 
 def printBlackjack(hand):
     global outcomeMessage, playerCash
-    playerCash += playerBet * 2.5
+    playerCash += currentHandBet * 2.5
     length = len(hand) * 3 + 3
     outcomeMessage += ("{:*^" + str(length) + "}").format("BlackJack")
 
 def printSurrender(hand):
     global outcomeMessage, playerCash
-    playerCash += playerBet/2
+    playerCash += currentHandBet/2
     length = len(hand) * 3 + 3
     outcomeMessage += ("{:*^" + str(length) + "}").format("Surrender")
 
@@ -414,16 +418,16 @@ def stand():
     goToNextHand = True
 
 def double(hand):
-    global playerBet, playerCash
-    playerCash -= playerBet
-    playerBet = playerBet * 2
+    global currentHandBet, playerCash
+    playerCash -= currentHandBet
+    currentHandBet = currentHandBet * 2
     hand.append(drawCard(False) )
     stand()
 
 def split(hand):
-    global playerBet, playerCash, timesSplit
+    global currentHandBet, playerCash, timesSplit
     timesSplit += 1
-    playerCash -= playerBet
+    playerCash -= currentHandBet
     copy = hand[:]
     tempHand1 = []
     tempHand2 = []
@@ -439,6 +443,16 @@ def surrender():
     global playerCash, surrenderIndex
     surrenderIndex.append(currentHand)
     stand()
+
+def changeBet(playerInput):
+    global playerBet
+    try:
+        float(playerInput)
+        inputIsFloat = True
+    except ValueError:
+        inputIsFloat = False
+    if inputIsFloat:
+        playerBet = round(float(playerInput), 2)
 
 def playDealerHand():
     global dealerShows
@@ -464,16 +478,16 @@ def playHands():
 
 def reset():
     global timesSplit, currentHand, evalMessage, playerOptions, playerChoice, outcomeMessage, surrenderIndex
-    global possibleOptions, playerBet, playerHands, dealerHand, dealerShows
+    global possibleOptions, playerBet, playerHands, dealerHand, dealerShows, currentHandBet
     timesSplit = 0
     currentHand = 0
+    currentHandBet = playerBet
     surrenderIndex = []
     evalMessage = ""
     playerOptions = ["Hit", "Stand", "Double", "Split", "Surrender"]
     playerChoice = ""
     outcomeMessage = ""
     possibleOptions = []
-    playerBet = 5
     playerHands = []
     dealerHand  = []
     dealerShows = []
@@ -486,7 +500,7 @@ def playGame():
         playDealerHand()
         displayHands()
         printOutcomes()
-        input("Continue?")
+        changeBet(input("Continue?"))
         reset()
 
 
