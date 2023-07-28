@@ -105,6 +105,7 @@ evalHand = []
 playerOptions = ["Hit", "Stand", "Double", "Split", "Surrender"]
 playerChoice = ""
 possibleOptions = []
+startingCash = 500
 playerCash = 500
 playerBet = 5
 currentHandBet = playerBet
@@ -113,6 +114,8 @@ dealerHand  = [] #   [card0, card1]
 dealerShows = [] #   [' '  , card1]
 numDecks = 5
 outcomeMessage = ""
+totalPlays = 0
+correctPlays = 0
 goToNextHand = False
 trainingMode = False
 
@@ -168,7 +171,7 @@ def displayOptions():
 
 #-----------Evaluation-----------#
 def getPlayerChoice():
-    global playerChoice, evalMessage
+    global playerChoice, evalMessage, correctPlays, totalPlays
     userInput = input()
     if userInput == "q" or userInput == "quit" or userInput == "exit":
         exit()
@@ -179,8 +182,10 @@ def getPlayerChoice():
     else:
         playerChoice = possibleOptions[int(userInput) - 1]
         comChoice = computerChoice(evalHand, cardValue(dealerHand[1]) )
+        totalPlays += 1
         if evaluatePlayerChoice(playerChoice, comChoice, evalHand):
             evalMessage = "Correct"
+            correctPlays += 1
         else:
             evalMessage = "Wrong you're supposed to " + comChoice
 
@@ -208,21 +213,7 @@ def computerChoice(hand, dealerVal):
         raise Exception("Error in calculating computerChoice")
     
 def computerChoiceVariations(hand, dealerVal):
-    if playerHasSoftHand(hand):
-        tableCount = basicStrategyVariations[1][handValue(hand) - 13][dealerVal - 2][1]
-        tableNum = 1
-        if tableCount >= 0:
-            if count >= tableCount:
-                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2][0]
-            else:
-                choice = basicStrategy[tableNum][handValue(hand) - 13][dealerVal - 2]
-        else:
-            if count <= tableCount:
-                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2][0]
-            else:
-                choice = basicStrategy[tableNum][handValue(hand) - 13][dealerVal - 2]
-
-    elif playerCanSplit(hand):
+    if playerCanSplit(hand):
         tableCount = basicStrategyVariations[2][cardValue(hand[0]) - 2][dealerVal - 2][1]
         tableNum = 2
         if tableCount >= 0:
@@ -235,6 +226,20 @@ def computerChoiceVariations(hand, dealerVal):
                 choice = basicStrategyVariations[tableNum][cardValue(hand[0]) - 2][dealerVal - 2][0]
             else:
                 choice = basicStrategy[tableNum][cardValue(hand[0]) - 2][dealerVal - 2]
+
+    elif playerHasSoftHand(hand):
+        tableCount = basicStrategyVariations[1][handValue(hand) - 13][dealerVal - 2][1]
+        tableNum = 1
+        if tableCount >= 0:
+            if count >= tableCount:
+                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2][0]
+            else:
+                choice = basicStrategy[tableNum][handValue(hand) - 13][dealerVal - 2]
+        else:
+            if count <= tableCount:
+                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2][0]
+            else:
+                choice = basicStrategy[tableNum][handValue(hand) - 13][dealerVal - 2]
 
     else:
         tableCount = basicStrategyVariations[0][handValue(hand) - 4][dealerVal - 2][1]
@@ -607,17 +612,27 @@ def playGame():
         printOutcomes()
         changeBet(input("Continue?"))
         reset()
+    results()
 
 def start():
-    global playerCash, playerBet, currentHandBet, trainingMode
+    global playerCash, playerBet, currentHandBet, trainingMode, startingCash
     playerCash = int(input("Starting Cash:\n"))
     playerBet = int(input("Starting Bet:\n"))
     currentHandBet = playerBet
+    startingCash = playerCash
     trainingMode = input("Basic Strategy WITH Variations? Y/N\n")
     if trainingMode.lower() == 'y':
         trainingMode = True
     else:
         trainingMode = False
+
+def results():
+    net = ("{:+.2f}").format(playerCash - startingCash)
+    net = net[0] + "$" + net[1:]
+    print("{:#^48}".format(""))
+    print("{:*^48}".format("SHUFFLING"))
+    print("{:#^48}\n\n".format(""))
+    print("Shoe Results:\n\tCash: ${:.2f}\n\tNet: {}\n\tPerformance: {}/{} Correct\n\n\n\n\n\n\n\n\n\n\n\n".format(playerCash, net, correctPlays, totalPlays))
 
 playGame()
 
