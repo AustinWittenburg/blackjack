@@ -213,12 +213,12 @@ def computerChoiceVariations(hand, dealerVal):
         tableNum = 1
         if tableCount >= 0:
             if count >= tableCount:
-                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2]
+                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2][0]
             else:
                 choice = basicStrategy[tableNum][handValue(hand) - 13][dealerVal - 2]
         else:
             if count <= tableCount:
-                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2]
+                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2][0]
             else:
                 choice = basicStrategy[tableNum][handValue(hand) - 13][dealerVal - 2]
 
@@ -227,28 +227,28 @@ def computerChoiceVariations(hand, dealerVal):
         tableNum = 2
         if tableCount >= 0:
             if count >= tableCount:
-                choice = basicStrategyVariations[tableNum][cardValue(hand[0]) - 13][dealerVal - 2]
+                choice = basicStrategyVariations[tableNum][cardValue(hand[0]) - 2][dealerVal - 2][0]
             else:
-                choice = basicStrategy[tableNum][cardValue(hand[0]) - 13][dealerVal - 2]
+                choice = basicStrategy[tableNum][cardValue(hand[0]) - 2][dealerVal - 2]
         else:
             if count <= tableCount:
-                choice = basicStrategyVariations[tableNum][cardValue(hand[0]) - 13][dealerVal - 2]
+                choice = basicStrategyVariations[tableNum][cardValue(hand[0]) - 2][dealerVal - 2][0]
             else:
-                choice = basicStrategy[tableNum][cardValue(hand[0]) - 13][dealerVal - 2]
+                choice = basicStrategy[tableNum][cardValue(hand[0]) - 2][dealerVal - 2]
 
     else:
         tableCount = basicStrategyVariations[0][handValue(hand) - 4][dealerVal - 2][1]
         tableNum = 0
         if tableCount >= 0:
             if count >= tableCount:
-                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2]
+                choice = basicStrategyVariations[tableNum][handValue(hand) - 4][dealerVal - 2][0]
             else:
-                choice = basicStrategy[tableNum][handValue(hand) - 13][dealerVal - 2]
+                choice = basicStrategy[tableNum][handValue(hand) - 4][dealerVal - 2]
         else:
             if count <= tableCount:
-                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2]
+                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2][0]
             else:
-                choice = basicStrategy[tableNum][handValue(hand) - 13][dealerVal - 2]
+                choice = basicStrategy[tableNum][handValue(hand) - 4][dealerVal - 2]
 
     
     return choice
@@ -597,7 +597,7 @@ def reset():
     dealerShows = []
 
 def playGame():
-    # start()
+    start()
     shuffleDeck()
     while len(deck) > 10:
         dealHands()
