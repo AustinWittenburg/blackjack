@@ -188,12 +188,8 @@ def computerChoice(hand, dealerVal):
     if trainingMode:
         choice = computerChoiceVariations(hand, dealerVal)
     else:
-        if playerHasSoftHand(hand):
-            choice = basicStrategy[1][handValue(hand) - 13][dealerVal - 2]
-        elif playerCanSplit(hand):
-            choice = basicStrategy[2][cardValue(hand[0]) - 2][dealerVal - 2]
-        else:
-            choice = basicStrategy[0][handValue(hand) - 4][dealerVal - 2]
+        choice = computerChoiceBasic(hand, dealerVal)
+
     if choice == 'H':
         return 'hit'
     elif choice == 'UH':
@@ -212,9 +208,60 @@ def computerChoice(hand, dealerVal):
         raise Exception("Error in calculating computerChoice")
     
 def computerChoiceVariations(hand, dealerVal):
+    if playerHasSoftHand(hand):
+        tableCount = basicStrategyVariations[1][handValue(hand) - 13][dealerVal - 2][1]
+        tableNum = 1
+        if tableCount >= 0:
+            if count >= tableCount:
+                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2]
+            else:
+                choice = basicStrategy[tableNum][handValue(hand) - 13][dealerVal - 2]
+        else:
+            if count <= tableCount:
+                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2]
+            else:
+                choice = basicStrategy[tableNum][handValue(hand) - 13][dealerVal - 2]
+
+    elif playerCanSplit(hand):
+        tableCount = basicStrategyVariations[2][cardValue(hand[0]) - 2][dealerVal - 2][1]
+        tableNum = 2
+        if tableCount >= 0:
+            if count >= tableCount:
+                choice = basicStrategyVariations[tableNum][cardValue(hand[0]) - 13][dealerVal - 2]
+            else:
+                choice = basicStrategy[tableNum][cardValue(hand[0]) - 13][dealerVal - 2]
+        else:
+            if count <= tableCount:
+                choice = basicStrategyVariations[tableNum][cardValue(hand[0]) - 13][dealerVal - 2]
+            else:
+                choice = basicStrategy[tableNum][cardValue(hand[0]) - 13][dealerVal - 2]
+
+    else:
+        tableCount = basicStrategyVariations[0][handValue(hand) - 4][dealerVal - 2][1]
+        tableNum = 0
+        if tableCount >= 0:
+            if count >= tableCount:
+                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2]
+            else:
+                choice = basicStrategy[tableNum][handValue(hand) - 13][dealerVal - 2]
+        else:
+            if count <= tableCount:
+                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2]
+            else:
+                choice = basicStrategy[tableNum][handValue(hand) - 13][dealerVal - 2]
+
     
-    pass
-    
+    return choice
+
+def computerChoiceBasic(hand, dealerVal):
+    if playerHasSoftHand(hand):
+        choice = basicStrategy[1][handValue(hand) - 13][dealerVal - 2]
+    elif playerCanSplit(hand):
+        choice = basicStrategy[2][cardValue(hand[0]) - 2][dealerVal - 2]
+    else:
+        choice = basicStrategy[0][handValue(hand) - 4][dealerVal - 2]
+    return choice
+
 def evaluatePlayerChoice(playerChoice, comChoice, hand):
     if comChoice == 'hit':
         return playerChoice == 'Hit'
@@ -308,7 +355,7 @@ def playerHasSoftHand(hand):
             numAces += 1
         else:
             softTotal += cardValue(card)
-    return numAces == 1 and softTotal < 11
+    return numAces > 0 and (numAces - 1) + softTotal < 11
 
 def playerCanSplit(hand):
     return hand[0][0] == hand[1][0] and len(hand) == 2 and timesSplit < 3
