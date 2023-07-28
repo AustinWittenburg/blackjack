@@ -58,13 +58,14 @@ playerChoice = ""
 possibleOptions = []
 playerCash = 500
 playerBet = 5
-currentHandBet = 5
+currentHandBet = playerBet
 playerHands = [] # [ [card0, card1], [card0, card1] ] Multiple hands are optional
 dealerHand  = [] #   [card0, card1]
 dealerShows = [] #   [' '  , card1]
 numDecks = 5
 outcomeMessage = ""
 goToNextHand = False
+trainingMode = True
 
 #-------------Setup--------------#
 def shuffleDeck():
@@ -493,6 +494,7 @@ def reset():
     dealerShows = []
 
 def playGame():
+    start()
     shuffleDeck()
     while len(deck) > 10:
         dealHands()
@@ -503,6 +505,17 @@ def playGame():
         changeBet(input("Continue?"))
         reset()
 
+def start():
+    global playerCash, playerBet, currentHandBet, trainingMode
+    playerCash = int(input("Starting Cash:\n"))
+    playerBet = int(input("Starting Bet:\n"))
+    currentHandBet = playerBet
+    trainingMode = input("Basic Strategy WITH Variations? Y/N\n")
+    if trainingMode.lower() == 'y':
+        trainingMode = True
+    else:
+        trainingMode = False
+    pass
 
 playGame()
 
