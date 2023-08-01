@@ -93,6 +93,10 @@ basicStrategyVariations = [
                     [['S', f],   ['S', f],   ['S', f],  ['P', 5],  ['P', 4],  ['S', f],   ['S', f],  ['S', f],  ['S', f],  ['S', f] ],     # 10s
                     [['P', f],   ['P', f],   ['P', f],  ['P', f],  ['P', f],  ['H', -10], ['H', -8], ['H', -8], ['H', -8], ['H', -7] ] ] ] # As
 
+valueVariations = [ [ [5, 0], [5, 5], [6, 8], [6, 9], [7, 9], [8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [9, 0], [9, 1], [11, 8], [12, 7], [12, 8] ],
+                    [],
+                    [ [8, 3], [8, 4] ] ]
+
 deck = []
 timesSplit = 0
 currentHand = 0
@@ -114,10 +118,15 @@ dealerHand  = [] #   [card0, card1]
 dealerShows = [] #   [' '  , card1]
 numDecks = 5
 outcomeMessage = ""
+GREEN = '\033[92m'
+RED = '\033[91m'
+BOLD ='\033[1m'
+ENDC = '\033[0m'
 totalPlays = 0
 correctPlays = 0
 goToNextHand = False
 trainingMode = False
+valuedOnly = False
 
 #-------------Setup--------------#
 def shuffleDeck():
@@ -184,10 +193,10 @@ def getPlayerChoice():
         comChoice = computerChoice(evalHand, cardValue(dealerHand[1]) )
         totalPlays += 1
         if evaluatePlayerChoice(playerChoice, comChoice, evalHand):
-            evalMessage = "Correct"
+            evalMessage = GREEN + "Correct" + ENDC
             correctPlays += 1
         else:
-            evalMessage = "Wrong you're supposed to " + comChoice
+            evalMessage = BOLD + "Wrong" + ENDC + " you're supposed to " + comChoice
 
 def computerChoice(hand, dealerVal):
     if trainingMode:
@@ -214,47 +223,25 @@ def computerChoice(hand, dealerVal):
     
 def computerChoiceVariations(hand, dealerVal):
     if playerCanSplit(hand):
-        tableCount = basicStrategyVariations[2][cardValue(hand[0]) - 2][dealerVal - 2][1]
+        playerIndex = cardValue(hand[0]) - 2
         tableNum = 2
-        if tableCount >= 0:
-            if count >= tableCount:
-                choice = basicStrategyVariations[tableNum][cardValue(hand[0]) - 2][dealerVal - 2][0]
-            else:
-                choice = basicStrategy[tableNum][cardValue(hand[0]) - 2][dealerVal - 2]
-        else:
-            if count <= tableCount:
-                choice = basicStrategyVariations[tableNum][cardValue(hand[0]) - 2][dealerVal - 2][0]
-            else:
-                choice = basicStrategy[tableNum][cardValue(hand[0]) - 2][dealerVal - 2]
 
     elif playerHasSoftHand(hand):
-        tableCount = basicStrategyVariations[1][handValue(hand) - 13][dealerVal - 2][1]
+        playerIndex = handValue(hand) - 13
         tableNum = 1
-        if tableCount >= 0:
-            if count >= tableCount:
-                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2][0]
-            else:
-                choice = basicStrategy[tableNum][handValue(hand) - 13][dealerVal - 2]
-        else:
-            if count <= tableCount:
-                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2][0]
-            else:
-                choice = basicStrategy[tableNum][handValue(hand) - 13][dealerVal - 2]
 
     else:
-        tableCount = basicStrategyVariations[0][handValue(hand) - 4][dealerVal - 2][1]
+        playerIndex = handValue(hand) - 4
         tableNum = 0
-        if tableCount >= 0:
-            if count >= tableCount:
-                choice = basicStrategyVariations[tableNum][handValue(hand) - 4][dealerVal - 2][0]
-            else:
-                choice = basicStrategy[tableNum][handValue(hand) - 4][dealerVal - 2]
-        else:
-            if count <= tableCount:
-                choice = basicStrategyVariations[tableNum][handValue(hand) - 13][dealerVal - 2][0]
-            else:
-                choice = basicStrategy[tableNum][handValue(hand) - 4][dealerVal - 2]
 
+    dealerIndex = dealerVal - 2
+    isValue = [playerIndex, dealerIndex] in valueVariations[tableNum]
+    if (valuedOnly and isValue) or (not valuedOnly):
+        choice = determineVariation(playerIndex, dealerIndex, tableNum)
+    else:    
+        # Get the choice from the basic table
+        choice = basicStrategy[tableNum][playerIndex][dealerIndex]
+    
     
     return choice
 
@@ -265,6 +252,16 @@ def computerChoiceBasic(hand, dealerVal):
         choice = basicStrategy[2][cardValue(hand[0]) - 2][dealerVal - 2]
     else:
         choice = basicStrategy[0][handValue(hand) - 4][dealerVal - 2]
+    return choice
+
+def determineVariation(playerIndex, dealerIndex, tableNum):
+    tableCount = basicStrategyVariations[tableNum][playerIndex][dealerIndex][1]
+    if (tableCount >= 0 and count >= tableCount) or (tableCount < 0 and count <= tableCount):
+        # Get the choice from the variations table
+        choice = basicStrategyVariations[tableNum][playerIndex][dealerIndex][0]
+    else:
+        # Get the choice from the basic table
+        choice = basicStrategy[tableNum][playerIndex][dealerIndex]
     return choice
 
 def evaluatePlayerChoice(playerChoice, comChoice, hand):
@@ -297,14 +294,6 @@ def evaluatePlayerChoice(playerChoice, comChoice, hand):
     return False
 
 def executePlayerChoice(hand):
-    # execute = {
-    #     "Hit"       : print(hand),
-    #     "Stand"     : stand(),
-    #     "Double"    : double(hand),
-    #     "Split"     : split(hand),
-    #     "Surrender" : surrender()
-    # }
-    # execute[playerChoice]
     if playerChoice == "Hit":
         hit(hand)
     if playerChoice == "Stand":
@@ -484,37 +473,37 @@ def printOutcomes():
 
 def printBust(hand):
     global outcomeMessage
-    length = len(hand) * 3 + 3
-    outcomeMessage += ("{:*^" + str(length) + "}").format("Bust")
+    length = len(hand) * 4 + 2
+    outcomeMessage += ("{:*^" + str(length + 13) + "} ").format(BOLD + RED + "Bust" + ENDC)
 
 def printWin(hand):
     global outcomeMessage, playerCash
     playerCash += currentHandBet * 2
-    length = len(hand) * 3 + 3
-    outcomeMessage += ("{:*^" + str(length) + "}").format("Win")
+    length = len(hand) * 4 + 2
+    outcomeMessage += ("{:*^" + str(length + 13) + "} ").format(BOLD + GREEN + "Win" + ENDC)
 
 def printLose(hand):
     global outcomeMessage
-    length = len(hand) * 3 + 3
-    outcomeMessage += ("{:*^" + str(length) + "}").format("Lose")
+    length = len(hand) * 4 + 2
+    outcomeMessage += ("{:*^" + str(length + 13) + "} ").format(BOLD + RED + "Lose" + ENDC)
 
 def printPush(hand):
     global outcomeMessage, playerCash
     playerCash += currentHandBet
-    length = len(hand) * 3 + 3
-    outcomeMessage += ("{:*^" + str(length) + "}").format("Push")
+    length = len(hand) * 4 + 2
+    outcomeMessage += ("{:*^" + str(length + 8) + "} ").format(BOLD + "Push" + ENDC)
 
 def printBlackjack(hand):
     global outcomeMessage, playerCash
     playerCash += currentHandBet * 2.5
-    length = len(hand) * 3 + 3
-    outcomeMessage += ("{:*^" + str(length) + "}").format("BlackJack")
+    length = len(hand) * 4 + 2
+    outcomeMessage += ("{:*^" + str(length + 13) + "} ").format(BOLD + GREEN + "BlackJack" + ENDC)
 
 def printSurrender(hand):
     global outcomeMessage, playerCash
     playerCash += currentHandBet/2
-    length = len(hand) * 3 + 3
-    outcomeMessage += ("{:*^" + str(length) + "}").format("Surrender")
+    length = len(hand) * 4 + 2
+    outcomeMessage += ("{:*^" + str(length + 8) + "} ").format(BOLD + "Surrender" + ENDC)
 
 # ---------Player Options----------#
 def hit(hand):
@@ -623,16 +612,26 @@ def start():
     trainingMode = input("Basic Strategy WITH Variations? Y/N\n")
     if trainingMode.lower() == 'y':
         trainingMode = True
+        valuedOnly = input("Most Valuable Variations Only? Y/N\n")
+        if valuedOnly.lower() == 'y':
+            valuedOnly = True
+        else:
+            valuedOnly = False
     else:
         trainingMode = False
 
 def results():
-    net = ("{:+.2f}").format(playerCash - startingCash)
-    net = net[0] + "$" + net[1:]
+    net = formatNet(playerCash - startingCash)
     print("{:#^48}".format(""))
     print("{:*^48}".format("SHUFFLING"))
     print("{:#^48}\n\n".format(""))
     print("Shoe Results:\n\tCash: ${:.2f}\n\tNet: {}\n\tPerformance: {}/{} Correct\n\n\n\n\n\n\n\n\n\n\n\n".format(playerCash, net, correctPlays, totalPlays))
+
+def formatNet(net):
+    if net >= 0:
+        return GREEN + "+$" + ("{:.2f}").format(abs(net)) + ENDC
+    elif net < 0:
+        return RED + "-$" + ("{:.2f}").format(abs(net)) + ENDC
 
 playGame()
 
@@ -656,6 +655,15 @@ def testMultiPrinting():
 
 def testDealerPrinting():
     prettyPrintDealerHand(['  ', 'Q♦'])
+
+# print(GREEN + "+$" + ("{:.2f}").format(abs(0)) + ENDC)
+# print(RED + "-$" + ("{:.2f}").format(abs(-62.50)) + ENDC)
+
+# print(("{:*^" + str(12 + 9) + "}").format(RED + "Lose" + ENDC))
+
+# evalMessage = GREEN + "Correct" + ENDC
+
+# print("Player:\t\tBet: ${:.2f}\t{}".format(currentHandBet, evalMessage) )
 
 # testDealerPrinting()
 
