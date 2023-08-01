@@ -53,45 +53,45 @@ basicStrategy = [
                                 #-------------Variations-------------#
 basicStrategyVariations = [
     # Hard Totals        2            3            4            5            6            7            8           9          10           A
-                  [ [['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],   ['H', f],   ['H', f],   ['H', f] ],    # 4
-                    [['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],   ['H', f],   ['H', f],   ['H', f] ],    # 5
-                    [['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],   ['H', f],   ['H', f],   ['H', f] ],    # 6
-                    [['H', f],    ['DH', 18],  ['DH', 13],  ['DH', 10],  ['DH', 10],  ['H', f],    ['H', f],   ['H', f],   ['H', f],   ['H', f] ],    # 7
-                    [['DH', 13],  ['DH', 9],   ['DH', 6],   ['DH', 3],   ['DH', 3],   ['DH', 15],  ['H', f],   ['H', f],   ['H', f],   ['H', f] ],    # 8
-                    [['DH', 1],   ['DH', 0],   ['H', -3],   ['H', -5],   ['H', -6],   ['DH', 3],   ['DH', 8],  ['H', f],   ['H', f],   ['H', f] ],    # 9
-                    [['H', -11],  ['H', -12],  ['H', -13],  ['H', -15],  ['H', -16],  ['H', -7],   ['H', -4],  ['H', -1],  ['DH', 3],  ['DH', 2] ],   # 10
-                    [['H', -15],  ['H', -16],  ['H', -18],  ['H', -19],  ['H', -20],  ['H', -11],  ['H', -7],  ['H', -5],  ['H', -5],  ['H', -3] ],   # 11
-                    [['S', 4],    ['S', 3],    ['S', 1],    ['H', -1],   ['H', -3],   ['H', f],    ['H', f],   ['H', f],   ['H', f],   ['S', 21] ],   # 12
-                    [['H', 0],    ['H', -1],   ['H', -3],   ['H', -5],   ['H', -7],   ['H', f],    ['H', f],   ['H', f],   ['S', 23],  ['S', 13] ],   # 13
-                    [['H', -3],   ['H', -5],   ['H', -6],   ['H', -7],   ['H', -10],  ['S', 16],   ['S', 20],  ['S', 15],  ['S', 11],  ['S', 8] ],    # 14
-                    [['H', -5],   ['H', -7],   ['H', -8],   ['H', -9],   ['H', -11],  ['S', 12],   ['S', 11],  ['S', 7],   ['S', 4],   ['S', 4] ],    # 15
-                    [['H', -9],   ['H', -10],  ['H', -12],  ['H', -13],  ['H', -13],  ['S', 10],   ['S', 9],   ['S', 4],   ['S', 0],   ['S', 2]],     # 16
-                    [['S', f],    ['S', f],    ['S', f],    ['H', -23],  ['H', -25],  ['S', f],    ['S', f],   ['S', f],   ['S', f],   ['UH', -6] ],  # 17
-                    [['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],   ['S', f],   ['S', f],   ['S', f] ],    # 18
-                    [['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],   ['S', f],   ['S', f],   ['S', f] ],    # 19
-                    [['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],   ['S', f],   ['S', f],   ['S', f] ],    # 20
-                    [['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],   ['S', f],   ['S', f],   ['S', f] ] ],  # 21
-    # Soft Totals         2           3          4          5           6           7          8           9         10           A
-                  [ [['DH', 11], ['DH', 7], ['DH', 2],  ['H', 0],   ['H', -1],  ['H', f],  ['H', f],   ['H', f],  ['H', f],   ['H', f] ],    # 13
-                    [['DH', 14], ['DH', 7], ['DH', 2],  ['H', -2],  ['H', -3],  ['H', f],  ['H', f],   ['H', f],  ['H', f],   ['H', f] ],    # 14
-                    [['DH', 22], ['DH', 9], ['DH', 1],  ['H', -4],  ['H', -7],  ['H', f],  ['H', f],   ['H', f],  ['H', f],   ['H', f] ],    # 15
-                    [['DH', 19], ['DH', 6], ['DH', -1], ['H', -6],  ['H', -13], ['H', f],  ['H', f],   ['H', f],  ['H', f],   ['H', f] ],    # 16
-                    [['DH', 4],  ['H', -1], ['H', -6],  ['H', -12], ['H', -14], ['S', 14], ['H', f],   ['H', f],  ['H', f],   ['H', f] ],    # 17
-                    [['DH', 3],  ['DH', 1], ['S', -7],  ['S', -9],  ['S', -12], ['S', f],  ['H', -18], ['H', f],  ['UH', 19], ['S', 6] ],    # 18
-                    [['DH', 9],  ['DH', 5], ['DH', 3],  ['DH', 1],  ['DH', 0],  ['S', f],  ['S', f],   ['S', f],  ['S', f],   ['S', f] ],    # 19
-                    [['DH', 10], ['DH', 8], ['DH', 6],  ['DH', 4],  ['DH', 4],  ['S', f],  ['S', f],   ['S', f],  ['S', f],   ['S', f] ],    # 20
-                    [['S', f],   ['S', f],  ['S', f],   ['S', f],   ['S', f],   ['S', f],  ['S', f],   ['S', f],  ['S', f],   ['S', f] ] ],  # 21
-    # Pairs              2           3           4          5          6          7           8          9         10          A
-                  [ [['H', 12],  ['H', -1],  ['H', -5], ['H', -4], ['H', -5], ['P', f],   ['H', f],  ['H', f],  ['H', f],  ['H', f] ],     # 2s
-                    [['H', 14],  ['H', 4],   ['H', -1], ['H', -4], ['H', -4], ['H', 8],   ['H', f],  ['H', f],  ['H', f],  ['H', f] ],     # 3s
-                    [['H', f],   ['H', f],   ['H', f],  ['DH', 9], ['DH', 9], ['H', f],   ['H', f],  ['H', f],  ['H', f],  ['H', f] ],     # 4s
-                    [['DH', f],  ['DH', f],  ['DH', f], ['DH', f], ['DH', f], ['DH', f],  ['DH', f], ['DH', f], ['H', f],  ['H', f] ],     # 5s
-                    [['H', 3],   ['H', 1],   ['H', -2], ['P', f],  ['P', f],  ['H', f],   ['H', f],  ['H', f],  ['H', f],  ['H', f] ],     # 6s
-                    [['H', -14], ['H', -12], ['P', f],  ['P', f],  ['P', f],  ['P', f],   ['H', f],  ['H', f],  ['H', f],  ['H', f] ],     # 7s
-                    [['P', f],   ['P', f],   ['P', f],  ['P', f],  ['P', f],  ['P', f],   ['P', f],  ['H', 18], ['H', 6],  ['H', -1] ],    # 8s
-                    [['S', -1],  ['S', -3],  ['S', -5], ['S', -6], ['S', -7], ['P', 5],   ['S', -7], ['S', -8], ['S', f],  ['P', 7] ],     # 9s
-                    [['S', f],   ['S', f],   ['S', f],  ['P', 5],  ['P', 4],  ['S', f],   ['S', f],  ['S', f],  ['S', f],  ['S', f] ],     # 10s
-                    [['P', f],   ['P', f],   ['P', f],  ['P', f],  ['P', f],  ['H', -10], ['H', -8], ['H', -8], ['H', -8], ['H', -7] ] ] ] # As
+                  [ [ ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],   ['H', f],   ['H', f],   ['H', f] ],    # 4
+                    [ ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],   ['H', f],   ['H', f],   ['H', f] ],    # 5
+                    [ ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],    ['H', f],   ['H', f],   ['H', f],   ['H', f] ],    # 6
+                    [ ['H', f],    ['DH', 18],  ['DH', 13],  ['DH', 10],  ['DH', 10],  ['H', f],    ['H', f],   ['H', f],   ['H', f],   ['H', f] ],    # 7
+                    [ ['DH', 13],  ['DH', 9],   ['DH', 6],   ['DH', 3],   ['DH', 3],   ['DH', 15],  ['H', f],   ['H', f],   ['H', f],   ['H', f] ],    # 8
+                    [ ['DH', 1],   ['DH', 0],   ['H', -3],   ['H', -5],   ['H', -6],   ['DH', 3],   ['DH', 8],  ['H', f],   ['H', f],   ['H', f] ],    # 9
+                    [ ['H', -11],  ['H', -12],  ['H', -13],  ['H', -15],  ['H', -16],  ['H', -7],   ['H', -4],  ['H', -1],  ['DH', 3],  ['DH', 2] ],   # 10
+                    [ ['H', -15],  ['H', -16],  ['H', -18],  ['H', -19],  ['H', -20],  ['H', -11],  ['H', -7],  ['H', -5],  ['H', -5],  ['H', -3] ],   # 11
+                    [ ['S', 4],    ['S', 3],    ['S', 1],    ['H', -1],   ['H', -3],   ['H', f],    ['H', f],   ['H', f],   ['H', f],   ['S', 21] ],   # 12
+                    [ ['H', 0],    ['H', -1],   ['H', -3],   ['H', -5],   ['H', -7],   ['H', f],    ['H', f],   ['H', f],   ['S', 23],  ['S', 13] ],   # 13
+                    [ ['H', -3],   ['H', -5],   ['H', -6],   ['H', -7],   ['H', -10],  ['S', 16],   ['S', 20],  ['S', 15],  ['S', 11],  ['S', 8] ],    # 14
+                    [ ['H', -5],   ['H', -7],   ['H', -8],   ['H', -9],   ['H', -11],  ['S', 12],   ['S', 11],  ['S', 7],   ['S', 4],   ['S', 4] ],    # 15
+                    [ ['H', -9],   ['H', -10],  ['H', -12],  ['H', -13],  ['H', -13],  ['S', 10],   ['S', 9],   ['S', 4],   ['S', 0],   ['S', 2]],     # 16
+                    [ ['S', f],    ['S', f],    ['S', f],    ['H', -23],  ['H', -25],  ['S', f],    ['S', f],   ['S', f],   ['S', f],   ['UH', -6] ],  # 17
+                    [ ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],   ['S', f],   ['S', f],   ['S', f] ],    # 18
+                    [ ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],   ['S', f],   ['S', f],   ['S', f] ],    # 19
+                    [ ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],   ['S', f],   ['S', f],   ['S', f] ],    # 20
+                    [ ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],    ['S', f],   ['S', f],   ['S', f],   ['S', f] ] ],  # 21
+    # Soft Totals          2           3          4          5           6           7          8           9         10           A
+                  [ [ ['DH', 11], ['DH', 7], ['DH', 2],  ['H', 0],   ['H', -1],  ['H', f],  ['H', f],   ['H', f],  ['H', f],   ['H', f] ],    # 13
+                    [ ['DH', 14], ['DH', 7], ['DH', 2],  ['H', -2],  ['H', -3],  ['H', f],  ['H', f],   ['H', f],  ['H', f],   ['H', f] ],    # 14
+                    [ ['DH', 22], ['DH', 9], ['DH', 1],  ['H', -4],  ['H', -7],  ['H', f],  ['H', f],   ['H', f],  ['H', f],   ['H', f] ],    # 15
+                    [ ['DH', 19], ['DH', 6], ['DH', -1], ['H', -6],  ['H', -13], ['H', f],  ['H', f],   ['H', f],  ['H', f],   ['H', f] ],    # 16
+                    [ ['DH', 4],  ['H', -1], ['H', -6],  ['H', -12], ['H', -14], ['S', 14], ['H', f],   ['H', f],  ['H', f],   ['H', f] ],    # 17
+                    [ ['DH', 3],  ['DH', 1], ['S', -7],  ['S', -9],  ['S', -12], ['S', f],  ['H', -18], ['H', f],  ['UH', 19], ['S', 6] ],    # 18
+                    [ ['DH', 9],  ['DH', 5], ['DH', 3],  ['DH', 1],  ['DH', 0],  ['S', f],  ['S', f],   ['S', f],  ['S', f],   ['S', f] ],    # 19
+                    [ ['DH', 10], ['DH', 8], ['DH', 6],  ['DH', 4],  ['DH', 4],  ['S', f],  ['S', f],   ['S', f],  ['S', f],   ['S', f] ],    # 20
+                    [ ['S', f],   ['S', f],  ['S', f],   ['S', f],   ['S', f],   ['S', f],  ['S', f],   ['S', f],  ['S', f],   ['S', f] ] ],  # 21
+    # Pairs               2           3           4          5          6          7           8          9         10          A
+                  [ [ ['H', 12],  ['H', -1],  ['H', -5], ['H', -4], ['H', -5], ['P', f],   ['H', f],  ['H', f],  ['H', f],  ['H', f] ],     # 2s
+                    [ ['H', 14],  ['H', 4],   ['H', -1], ['H', -4], ['H', -4], ['H', 8],   ['H', f],  ['H', f],  ['H', f],  ['H', f] ],     # 3s
+                    [ ['H', f],   ['H', f],   ['H', f],  ['DH', 9], ['DH', 9], ['H', f],   ['H', f],  ['H', f],  ['H', f],  ['H', f] ],     # 4s
+                    [ ['DH', f],  ['DH', f],  ['DH', f], ['DH', f], ['DH', f], ['DH', f],  ['DH', f], ['DH', f], ['H', f],  ['H', f] ],     # 5s
+                    [ ['H', 3],   ['H', 1],   ['H', -2], ['P', f],  ['P', f],  ['H', f],   ['H', f],  ['H', f],  ['H', f],  ['H', f] ],     # 6s
+                    [ ['H', -14], ['H', -12], ['P', f],  ['P', f],  ['P', f],  ['P', f],   ['H', f],  ['H', f],  ['H', f],  ['H', f] ],     # 7s
+                    [ ['P', f],   ['P', f],   ['P', f],  ['P', f],  ['P', f],  ['P', f],   ['P', f],  ['H', 18], ['H', 6],  ['H', -1] ],    # 8s
+                    [ ['S', -1],  ['S', -3],  ['S', -5], ['S', -6], ['S', -7], ['P', 5],   ['S', -7], ['S', -8], ['S', f],  ['P', 7] ],     # 9s
+                    [ ['S', f],   ['S', f],   ['S', f],  ['P', 5],  ['P', 4],  ['S', f],   ['S', f],  ['S', f],  ['S', f],  ['S', f] ],     # 10s
+                    [ ['P', f],   ['P', f],   ['P', f],  ['P', f],  ['P', f],  ['H', -10], ['H', -8], ['H', -8], ['H', -8], ['H', -7] ] ] ] # As
 
 valueVariations = [ [ [5, 0], [5, 5], [6, 8], [6, 9], [7, 9], [8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [9, 0], [9, 1], [11, 8], [12, 7], [12, 8] ],
                     [],
@@ -100,9 +100,9 @@ valueVariations = [ [ [5, 0], [5, 5], [6, 8], [6, 9], [7, 9], [8, 0], [8, 1], [8
 deck = []
 timesSplit = 0
 currentHand = 0
-canSurrender = True
 surrenderIndex = []
 count = 0
+trueCount = 0
 HiLo = [ ['2', '3', '4', '5', '6'], ['7', '8', '9'], ['T', 'J', 'Q', 'K', 'A'] ]
 evalMessage = ""
 evalHand = []
@@ -112,11 +112,12 @@ possibleOptions = []
 startingCash = 500
 playerCash = 500
 playerBet = 5
+minBet = 5
+maxBet = 50
 currentHandBet = playerBet
 playerHands = [] # [ [card0, card1], [card0, card1] ] Multiple hands are optional
 dealerHand  = [] #   [card0, card1]
 dealerShows = [] #   [' '  , card1]
-numDecks = 5
 outcomeMessage = ""
 GREEN = '\033[92m'
 RED = '\033[91m'
@@ -124,9 +125,16 @@ BOLD ='\033[1m'
 ENDC = '\033[0m'
 totalPlays = 0
 correctPlays = 0
+handsWon = 0
+handsLost = 0
+totalHands = 0
 goToNextHand = False
 trainingMode = False
 valuedOnly = False
+
+#-----------Game Rules-----------#
+numDecks = 5
+canSurrender = True
 
 #-------------Setup--------------#
 def shuffleDeck():
@@ -184,7 +192,7 @@ def getPlayerChoice():
     userInput = input()
     if userInput == "q" or userInput == "quit" or userInput == "exit":
         exit()
-    elif userInput == '':
+    elif userInput == '' or int(userInput) > len(possibleOptions) or int(userInput) <= 0:
         displayHands()
         giveOpitons(playerHands[currentHand])
         getPlayerChoice()
@@ -311,6 +319,158 @@ def HiLoCount(card):
         count += 1
     elif card[0] in HiLo[2]:
         count -= 1
+
+#----------Computer Sim----------#
+def giveSimulatedOpitons(hand):
+    global possibleOptions
+    possibleOptions = ["Hit", "Stand"]
+    if playerCanDouble(hand):
+        possibleOptions.append("Double")
+    if playerCanSplit(hand):
+        possibleOptions.append("Split")
+    if playerCanSurrender():
+        possibleOptions.append("Surrender")
+
+def simulateComputer():
+    comChoice = computerChoiceBasic(evalHand, cardValue(dealerHand[1]) )
+    # comChoice = computerChoiceVariations(evalHand, cardValue(dealerHand[1]) )
+    if comChoice == 'hit':
+        return 'Hit'
+    elif comChoice == 'surrender otherwise hit':
+        if 'Surrender' in possibleOptions:
+            return 'Surrender'
+        else:
+            return 'Hit'
+    elif comChoice == 'double otherwise hit':
+        if 'Double' in possibleOptions:
+            return 'Double'
+        else:
+            return 'Hit'
+    elif comChoice == 'double otherwise stand':
+        if 'Double' in possibleOptions:
+            return 'Double'
+        else:
+            return 'Stand'
+    elif comChoice == 'stand':
+        return 'Stand'
+    elif comChoice == 'split':
+        return 'Split'
+    elif comChoice == 'surrender otherwise stand':
+        if 'Surrender' in possibleOptions:
+            return 'Surrender'
+        else:
+            return 'Stand'
+    return 'Stand'
+
+def executeComputerChoice():
+    global playerChoice 
+    playerChoice = simulateComputer()
+    executePlayerChoice(playerHands[currentHand])
+
+def playSimulatedHands():
+    global currentHand, goToNextHand, evalHand
+    while len(playerHands) > currentHand:
+        evalHand = playerHands[currentHand]
+        # displayHands()
+        if playerHasBlackjack(currentHand):
+            currentHand += 1
+        else:
+            giveSimulatedOpitons(playerHands[currentHand])
+            executeComputerChoice()
+        if goToNextHand:
+            currentHand += 1
+            goToNextHand = False
+
+def runSimulation():
+    global totalHands
+    shuffleDeck()
+    while len(deck) > 15:
+        totalHands += 1
+        dealHands()
+        playSimulatedHands()
+        playDealerHand()
+        printSimulatedOutcomes()
+        changeSimulatedBet()
+        reset()
+
+def changeSimulatedBet():
+    global playerBet, trueCount
+    estimatedNumDecks = round( (len(deck) / 52) * 2) / 2
+    if estimatedNumDecks < 0.5:
+        estimatedNumDecks = 0.5
+    trueCount = int(count // estimatedNumDecks)
+    if trueCount >= 2:
+        if (trueCount // 2) * minBet <= maxBet:
+            playerBet = (trueCount // 2) * minBet
+        else: 
+            playerBet = maxBet
+    else:
+        playerBet = minBet
+    
+def playFullSimulation(startingAmount, min, max, numShoes):
+    global playerCash, playerBet, currentHandBet, startingCash, minBet, maxBet
+    minBet = min
+    maxBet = max
+    playerCash = startingAmount
+    playerBet = minBet
+    currentHandBet = playerBet
+    startingCash = playerCash
+    while numShoes > 0:
+        runSimulation()
+        numShoes -= 1
+
+def printSimulatedOutcomes():
+    dealerScore = handValue(dealerHand)
+    for i in range(len(playerHands)):
+        playerScore = handValue(playerHands[i])
+        if playerHasBlackjack(i):
+            if dealerHasBlackjack():
+                simulatePush()
+            else:
+                simulateBlackjack()
+        elif i in surrenderIndex:
+            simulateSurrender()
+        elif playerBust(playerHands[i]):
+            simulateBust()
+        elif playerScore == dealerScore:
+            simulatePush()
+        elif playerScore > dealerScore or dealerBust():
+            simulateWin()
+        elif playerScore < dealerScore:
+            simulateLose()
+
+def simulateBust():
+    global playerCash, handsLost
+    handsLost += 1
+    print(BOLD + RED + "Bust" + ENDC + "\t\tCash: {}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
+
+def simulateWin():
+    global playerCash, handsWon
+    handsWon += 1
+    playerCash += currentHandBet * 2
+    print(BOLD + GREEN + "Win" + ENDC + "\t\tCash: {}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
+
+def simulateLose():
+    global playerCash, handsLost
+    handsLost += 1
+    print(BOLD + RED + "Lose" + ENDC + "\t\tCash: {}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
+
+def simulatePush():
+    global playerCash
+    playerCash += currentHandBet
+    print(BOLD + "Push" + ENDC + "\t\tCash: {}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
+
+def simulateBlackjack():
+    global playerCash, handsWon
+    handsWon += 1
+    playerCash += currentHandBet * 2.5
+    print(BOLD + GREEN + "BlackJack" + ENDC + "\tCash: {}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
+
+def simulateSurrender():
+    global playerCash, handsLost
+    handsLost += 1
+    playerCash += currentHandBet/2
+    print(BOLD + "Surrender" + ENDC + "\t\tCash: {}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
 
 #----------Hand Checks-----------#
 def handValue(hand):
@@ -590,10 +750,23 @@ def reset():
     dealerHand  = []
     dealerShows = []
 
+def results():
+    net = formatNet(playerCash - startingCash)
+    print("{:#^48}".format(""))
+    print("{:*^48}".format("SHUFFLING"))
+    print("{:#^48}\n\n".format(""))
+    print("Shoe Results:\n\tCash: ${:.2f}\n\tNet: {}\n\tPerformance: {}/{} Correct\n\n\n\n\n\n\n\n\n\n\n\n".format(playerCash, net, correctPlays, totalPlays))
+
+def formatNet(net):
+    if net >= 0:
+        return GREEN + "+$" + ("{:.2f}").format(abs(net)) + ENDC
+    elif net < 0:
+        return RED + "-$" + ("{:.2f}").format(abs(net)) + ENDC
+
 def playGame():
     start()
     shuffleDeck()
-    while len(deck) > 10:
+    while len(deck) > 15:
         dealHands()
         playHands()
         playDealerHand()
@@ -620,21 +793,9 @@ def start():
     else:
         trainingMode = False
 
-def results():
-    net = formatNet(playerCash - startingCash)
-    print("{:#^48}".format(""))
-    print("{:*^48}".format("SHUFFLING"))
-    print("{:#^48}\n\n".format(""))
-    print("Shoe Results:\n\tCash: ${:.2f}\n\tNet: {}\n\tPerformance: {}/{} Correct\n\n\n\n\n\n\n\n\n\n\n\n".format(playerCash, net, correctPlays, totalPlays))
-
-def formatNet(net):
-    if net >= 0:
-        return GREEN + "+$" + ("{:.2f}").format(abs(net)) + ENDC
-    elif net < 0:
-        return RED + "-$" + ("{:.2f}").format(abs(net)) + ENDC
-
 playGame()
 
+# playFullSimulation(5000, 1, 50, 50)
 
 #----------------DEBUG------------------#
 def testPrinting():
@@ -677,3 +838,14 @@ def testDealerPrinting():
 # length = 6
 # outcomeMessage += ("{:*^" + str(length) + "}").format("Blackjack")
 # print(outcomeMessage)
+
+# min = 5
+# max = 50
+# list = [i for i in range(min, max+1) if i % 5 == 0]
+# print(list)
+
+# count = 17
+# estimatedNumDecks = round( (400 / 52) * 2) / 2
+# trueCount = count // estimatedNumDecks
+
+# print(trueCount)
