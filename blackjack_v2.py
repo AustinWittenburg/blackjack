@@ -35,7 +35,7 @@ basicStrategy = [
                     ['H',  'H',  'DH', 'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 16
                     ['H',  'DH', 'DH', 'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 17
                     ['S',  'DS', 'DS', 'DS', 'DS', 'S',  'S',  'H',  'H',  'H' ],    # 18
-                    ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 19
+                    ['S',  'S',  'S',  'S',  'DS', 'S',  'S',  'S',  'S',  'S' ],    # 19
                     ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 20
                     ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ] ],  # 21
     # Pairs           2     3     4     5     6     7     8     9     10    A
@@ -92,7 +92,6 @@ basicStrategyVariations = [
                     [ ['S', -1],  ['S', -3],  ['S', -5], ['S', -6], ['S', -7], ['P', 5],   ['S', -7], ['S', -8], ['S', f],  ['P', 7] ],     # 9s
                     [ ['S', f],   ['S', f],   ['S', f],  ['P', 5],  ['P', 4],  ['S', f],   ['S', f],  ['S', f],  ['S', f],  ['S', f] ],     # 10s
                     [ ['P', f],   ['P', f],   ['P', f],  ['P', f],  ['P', f],  ['H', -10], ['H', -8], ['H', -8], ['H', -8], ['H', -7] ] ] ] # As
-
 valueVariations = [ [ [5, 0], [5, 5], [6, 8], [6, 9], [7, 9], [8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [9, 0], [9, 1], [11, 8], [12, 7], [12, 8] ],
                     [],
                     [ [8, 3], [8, 4] ] ]
@@ -133,7 +132,7 @@ trainingMode = False
 valuedOnly = False
 
 #-----------Game Rules-----------#
-numDecks = 8
+numDecks = 2
 canSurrender = True
 
 #-------------Setup--------------#
@@ -410,7 +409,7 @@ def changeSimulatedBet():
         else: 
             playerBet = maxBet
     else:
-        playerBet = minBet
+        playerBet = 0 # minBet
     
 def playFullSimulation(startingAmount, min, max, numShoes):
     global playerCash, playerBet, currentHandBet, startingCash, minBet, maxBet
