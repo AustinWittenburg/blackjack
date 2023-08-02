@@ -133,7 +133,7 @@ trainingMode = False
 valuedOnly = False
 
 #-----------Game Rules-----------#
-numDecks = 5
+numDecks = 8
 canSurrender = True
 
 #-------------Setup--------------#
@@ -254,17 +254,22 @@ def computerChoiceVariations(hand, dealerVal):
     return choice
 
 def computerChoiceBasic(hand, dealerVal):
-    if playerHasSoftHand(hand):
-        choice = basicStrategy[1][handValue(hand) - 13][dealerVal - 2]
-    elif playerCanSplit(hand):
+    if playerCanSplit(hand):
         choice = basicStrategy[2][cardValue(hand[0]) - 2][dealerVal - 2]
+    elif playerHasSoftHand(hand):
+        choice = basicStrategy[1][handValue(hand) - 13][dealerVal - 2]
     else:
         choice = basicStrategy[0][handValue(hand) - 4][dealerVal - 2]
     return choice
 
 def determineVariation(playerIndex, dealerIndex, tableNum):
+    global trueCount
     tableCount = basicStrategyVariations[tableNum][playerIndex][dealerIndex][1]
-    if (tableCount >= 0 and count >= tableCount) or (tableCount < 0 and count <= tableCount):
+    estimatedNumDecks = round( (len(deck) / 52) * 2) / 2
+    if estimatedNumDecks < 0.5:
+        estimatedNumDecks = 0.5
+    trueCount = int(count // estimatedNumDecks)
+    if (tableCount >= 0 and trueCount >= tableCount) or (tableCount < 0 and trueCount <= tableCount):
         # Get the choice from the variations table
         choice = basicStrategyVariations[tableNum][playerIndex][dealerIndex][0]
     else:
@@ -332,8 +337,8 @@ def giveSimulatedOpitons(hand):
         possibleOptions.append("Surrender")
 
 def simulateComputer():
-    comChoice = computerChoiceBasic(evalHand, cardValue(dealerHand[1]) )
-    # comChoice = computerChoiceVariations(evalHand, cardValue(dealerHand[1]) )
+    # comChoice = computerChoiceBasic(evalHand, cardValue(dealerHand[1]) )
+    comChoice = computerChoiceVariations(evalHand, cardValue(dealerHand[1]) )
     if comChoice == 'hit':
         return 'Hit'
     elif comChoice == 'surrender otherwise hit':
@@ -399,9 +404,9 @@ def changeSimulatedBet():
     if estimatedNumDecks < 0.5:
         estimatedNumDecks = 0.5
     trueCount = int(count // estimatedNumDecks)
-    if trueCount >= 2:
-        if (trueCount // 2) * minBet <= maxBet:
-            playerBet = (trueCount // 2) * minBet
+    if trueCount >= 1:
+        if trueCount * minBet <= maxBet:
+            playerBet = math.floor(trueCount) * minBet
         else: 
             playerBet = maxBet
     else:
@@ -482,7 +487,7 @@ def handValue(hand):
         else:
             sum += cardValue(card)
     for i in range(numAces):
-        if (i == (numAces - 1) ) and ( (sum + 11) <= 21): 
+        if i == 0 and (sum + 11) <= 21: 
             sum += 11
         else: sum += 1
     return sum
@@ -764,8 +769,10 @@ def formatNet(net):
         return RED + "-$" + ("{:.2f}").format(abs(net)) + ENDC
 
 def playGame():
+    # global deck
     start()
     shuffleDeck()
+    # deck = ['6♣', '7♣', 'A♣', 'T♣', '3♣', 'Q♣', '7♣']
     while len(deck) > 15:
         dealHands()
         playHands()
@@ -793,9 +800,9 @@ def start():
     else:
         trainingMode = False
 
-playGame()
+# playGame()
 
-# playFullSimulation(5000, 1, 50, 50)
+playFullSimulation(5000, 5, 50, 50)
 
 #----------------DEBUG------------------#
 def testPrinting():
@@ -817,6 +824,15 @@ def testMultiPrinting():
 def testDealerPrinting():
     prettyPrintDealerHand(['  ', 'Q♦'])
 
+def testSpecificHand():
+    global deck
+    deck = ['6♣', '7♣', '8♣', '9♣', 'A♣', 'A♣', 'A♣']
+    dealHands()
+    playHands()
+    playDealerHand()
+    displayHands()
+    printOutcomes()
+
 # print(GREEN + "+$" + ("{:.2f}").format(abs(0)) + ENDC)
 # print(RED + "-$" + ("{:.2f}").format(abs(-62.50)) + ENDC)
 
@@ -831,6 +847,8 @@ def testDealerPrinting():
 # testMultiPrinting()
 
 # testPrinting()
+
+# testSpecificHand()
 
 # print(('│{:<3} end').format("3♣"))
 # print(('│{:<3} end').format("10♣"))
