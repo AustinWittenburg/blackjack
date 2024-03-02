@@ -1,5 +1,6 @@
 import random
 import math
+import os
 
 freshDeck = ['2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', 'T♣', 'J♣', 'Q♣', 'K♣', 'A♣',
              '2♥', '3♥', '4♥', '5♥', '6♥', '7♥', '8♥', '9♥', 'T♥', 'J♥', 'Q♥', 'K♥', 'A♥',
@@ -15,26 +16,26 @@ basicStrategy = [
                     ['H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H' ],    # 6
                     ['H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H' ],    # 7
                     ['H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H',  'H' ],    # 8
-                    ['H',  'DH', 'DH', 'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 9
+                    ['DH', 'DH', 'DH', 'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 9
                     ['DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'H',  'H' ],    # 10
-                    ['DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'H' ],    # 11
+                    ['DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH', 'DH'],    # 11
                     ['H',  'H',  'S',  'S',  'S',  'H',  'H',  'H',  'H',  'H' ],    # 12
                     ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'H',  'H',  'H' ],    # 13
                     ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'H',  'H',  'H' ],    # 14
-                    ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'H',  'UH', 'H' ],    # 15
-                    ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'UH', 'UH', 'UH'],    # 16
-                    ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 17
+                    ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'H',  'UH', 'UH'],    # 15
+                    ['S',  'S',  'S',  'S',  'S',  'H',  'H',  'H',  'UH', 'UH'],    # 16
+                    ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'US'],    # 17
                     ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 18
                     ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 19
                     ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 20
                     ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ] ],  # 21
     # Soft Totals     2     3     4     5     6     7     8     9     10    A
                   [ ['H',  'H',  'H',  'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 13
-                    ['H',  'H',  'H',  'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 14
+                    ['H',  'H',  'DH', 'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 14
                     ['H',  'H',  'DH', 'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 15
                     ['H',  'H',  'DH', 'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 16
                     ['H',  'DH', 'DH', 'DH', 'DH', 'H',  'H',  'H',  'H',  'H' ],    # 17
-                    ['S',  'DS', 'DS', 'DS', 'DS', 'S',  'S',  'H',  'H',  'H' ],    # 18
+                    ['DS', 'DS', 'DS', 'DS', 'DS', 'S',  'S',  'H',  'H',  'H' ],    # 18
                     ['S',  'S',  'S',  'S',  'DS', 'S',  'S',  'S',  'S',  'S' ],    # 19
                     ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ],    # 20
                     ['S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S',  'S' ] ],  # 21
@@ -132,7 +133,7 @@ trainingMode = False
 valuedOnly = False
 
 #-----------Game Rules-----------#
-numDecks = 2
+numDecks = 6
 canSurrender = True
 
 #-------------Setup--------------#
@@ -161,6 +162,7 @@ def drawCard(DealerDownCard):
     return card
 
 def displayHands():
+    os.system('cls')
     print("Dealer:\t\tCount: {}\t${:.2f}".format(count, playerCash) )
     prettyPrintDealerHand(dealerShows)
     print("Player:\t\tBet: ${:.2f}\t{}".format(currentHandBet, evalMessage) )
@@ -398,16 +400,20 @@ def runSimulation():
         reset()
 
 def changeSimulatedBet():
+    spread = [10, 40, 65, 95, 120, 250, 400]
     global playerBet, trueCount
     estimatedNumDecks = round( (len(deck) / 52) * 2) / 2
     if estimatedNumDecks < 0.5:
         estimatedNumDecks = 0.5
     trueCount = int(count // estimatedNumDecks)
     if trueCount >= 1:
-        if trueCount * minBet <= maxBet:
-            playerBet = math.floor(trueCount) * minBet
+        if trueCount <= len(spread):
+            playerBet = spread[trueCount - 1]
+        # if pow(2, trueCount) * minBet <= maxBet:
+        #     playerBet = pow(2, math.floor(trueCount) ) * minBet
         else: 
-            playerBet = maxBet
+            playerBet = spread[4]
+        #     playerBet = maxBet
     else:
         playerBet = 0 # minBet
     
@@ -446,35 +452,35 @@ def printSimulatedOutcomes():
 def simulateBust():
     global playerCash, handsLost
     handsLost += 1
-    print(BOLD + RED + "Bust" + ENDC + "\t\tCash: {}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
+    print(BOLD + RED + "Bust" + ENDC + "\t\tCash: {:,}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
 
 def simulateWin():
     global playerCash, handsWon
     handsWon += 1
     playerCash += currentHandBet * 2
-    print(BOLD + GREEN + "Win" + ENDC + "\t\tCash: {}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
+    print(BOLD + GREEN + "Win" + ENDC + "\t\tCash: {:,}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
 
 def simulateLose():
     global playerCash, handsLost
     handsLost += 1
-    print(BOLD + RED + "Lose" + ENDC + "\t\tCash: {}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
+    print(BOLD + RED + "Lose" + ENDC + "\t\tCash: {:,}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
 
 def simulatePush():
     global playerCash
     playerCash += currentHandBet
-    print(BOLD + "Push" + ENDC + "\t\tCash: {}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
+    print(BOLD + "Push" + ENDC + "\t\tCash: {:,}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
 
 def simulateBlackjack():
     global playerCash, handsWon
     handsWon += 1
     playerCash += currentHandBet * 2.5
-    print(BOLD + GREEN + "BlackJack" + ENDC + "\tCash: {}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
+    print(BOLD + GREEN + "BlackJack" + ENDC + "\tCash: {:,}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
 
 def simulateSurrender():
     global playerCash, handsLost
     handsLost += 1
     playerCash += currentHandBet/2
-    print(BOLD + "Surrender" + ENDC + "\t\tCash: {}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
+    print(BOLD + "Surrender" + ENDC + "\t\tCash: {:,}\tBet: {}\tRunning Count: {}\tTrue Count: {}\tPercent Hands Won: {:%}".format(playerCash, playerBet, count, trueCount, handsWon/totalHands) )
 
 #----------Hand Checks-----------#
 def handValue(hand):
@@ -753,6 +759,7 @@ def reset():
     playerHands = []
     dealerHand  = []
     dealerShows = []
+    os.system('cls')
 
 def results():
     net = formatNet(playerCash - startingCash)
@@ -771,14 +778,14 @@ def playGame():
     # global deck
     start()
     shuffleDeck()
-    # deck = ['6♣', '7♣', 'A♣', 'T♣', '3♣', 'Q♣', '7♣']
+    # deck = ['6♣', '7♣', '6♣', '5♣', 'K♣', 'Q♣', 'A♣', '6♣', '7♣', '6♣', 'A♣', 'K♣', 'Q♣', 'A♣']
     while len(deck) > 15:
         dealHands()
         playHands()
         playDealerHand()
         displayHands()
         printOutcomes()
-        changeBet(input("Continue?"))
+        changeBet(input("Continue? ") )
         reset()
     results()
 
@@ -798,10 +805,11 @@ def start():
             valuedOnly = False
     else:
         trainingMode = False
+    os.system('cls')
 
-# playGame()
+playGame()
 
-playFullSimulation(5000, 5, 50, 50)
+# playFullSimulation(5000000, 10, 1000, 50)
 
 #----------------DEBUG------------------#
 def testPrinting():
