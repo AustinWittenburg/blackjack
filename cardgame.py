@@ -41,28 +41,56 @@ class Hand:
     def clearHand(self):
         self.hand = []
 
+    def hasSingleHand(self):
+        return not isinstance(self.hand[0], Hand)
+
 class Player(Hand):
     def __init__(self, money = None, bet = None):
         self.money = money or 500
         self.bet = bet or 10
         Hand.__init__(self)
 
-    # def split(self, hand, dealer):
-    #     tempHand1 = Hand([hand.cards[0]])
-    #     tempHand2 = Hand([hand.cards[1]])
-    #     dealer.dealCardTo(tempHand1)
-    #     dealer.dealCardTo(tempHand2)
-    #     self.hands.remove(hand)
-    #     self.hands.append(tempHand1)
-    #     self.hands.append(tempHand2)
+class Dealer(Hand, Deck):
+    def __init__(self):
+        Hand.__init__(self)
+        Deck.__init__(self)
 
-deck = Deck()
-deck.shuffle()
+    def dealCardTo(self, player):
+        player.addCardToHand(self.deck.pop())
+    
+    def split(self, player):
+        if player.hasSingleHand():
+            tempHand1 = Hand([player.hand[0]])
+            tempHand2 = Hand([player.hand[1]])
+            self.dealCardTo(tempHand1)
+            self.dealCardTo(tempHand2)
+            player.hand = [tempHand1, tempHand2]
+        else:
+            currentHand = 1
+            tempHand1 = Hand([player.hand[currentHand].hand[0]])
+            tempHand2 = Hand([player.hand[currentHand].hand[1]])
+            self.dealCardTo(tempHand1)
+            self.dealCardTo(tempHand2)
+            player.hand.remove(player.hand[currentHand])
+            player.hand.insert(currentHand, tempHand2)
+            player.hand.insert(currentHand, tempHand1)
+            
+player = Player()
+dealer = Dealer()
+dealer.shuffle()
 
-player1 = Player()
-player1.addCardToHand(deck.deck.pop())
-print(player1)
+dealer.dealCardTo(player)
+dealer.dealCardTo(dealer)
+dealer.dealCardTo(player)
+dealer.dealCardTo(dealer)
 
-player2 = Player()
-player2.addCardToHand(deck.deck.pop())
-print(player2)
+print(player)
+# print(dealer)
+
+dealer.split(player)
+print(player)
+# print(dealer)
+
+dealer.split(player)
+print(player)
+# print(dealer)
