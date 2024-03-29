@@ -66,7 +66,7 @@ class Dealer(Hand, Deck):
             self.dealCardTo(tempHand2)
             player.hand = [tempHand1, tempHand2]
         else:
-            currentHand = 1
+            currentHand = 0
             tempHand1 = Hand([player.hand[currentHand].hand[0]])
             tempHand2 = Hand([player.hand[currentHand].hand[1]])
             self.dealCardTo(tempHand1)
@@ -75,6 +75,10 @@ class Dealer(Hand, Deck):
             player.hand.insert(currentHand, tempHand2)
             player.hand.insert(currentHand, tempHand1)
             
+    def double(self, player):
+        player.bet = player.bet * 2
+        self.dealCardTo(player)
+
 player = Player()
 dealer = Dealer()
 dealer.shuffle()
