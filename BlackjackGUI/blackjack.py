@@ -19,7 +19,7 @@ frm_sidebar = tk.Frame(master=window, width=125, height=720, relief=tk.GROOVE, b
 frm_sidebar.pack(fill=tk.Y, side=tk.RIGHT, expand=False)
 
 # Start Game Button
-btn_start_game = tk.Button(master=frm_sidebar, text='Start Game', bg='#a6660d')
+btn_start_game = tk.Button(master=frm_sidebar, text='Start Game', bg='#ba863f')
 btn_start_game.pack()
 
 # Table Frame
